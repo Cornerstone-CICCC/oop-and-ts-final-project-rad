@@ -1,0 +1,94 @@
+---
+const {title, tasks,id} = Astro.props;
+
+---
+<div class="col"
+ id={id}
+ ondrop="dropHandler(event)"
+ ondragover ="dragoverHandler(event)">
+    <div class="top-box">
+        <h2 class="h2-title">{title}</h2>
+        <div><img src="../../public/Plus.svg" alt="add icon" 
+            class="add-icon"
+            onclick="openEmptycard(event)"/></div>
+    </div>
+    <!-- Card -->
+    <div class="cards-container">
+        {
+        tasks.map((task) => (
+            <div class="card"
+                draggable="true"
+                ondragstart ="dragstartHandler(event)"
+                id={task.id}>
+                <div class="task-title">{task.title}</div>
+                <div>{task.priority}</div>
+                <div>Due: {task.deadline}</div>
+            </div>
+        ))
+        }
+    </div>
+</div>
+<script is:inline>
+    function dragstartHandler(ev){
+    ev.dataTransfer.setData("text", ev.target.id);
+    }
+
+    function dragoverHandler(ev){
+        ev.preventDefault();
+    }
+
+    function dropHandler(ev){
+        ev.preventDefault();
+        const data = ev.dataTransfer.getData("text");
+        console.log(data)
+        ev.target.appendChild(document.getElementById(data));
+        const progressId = ev.target.id
+    }
+
+    function openEmptycard(event){
+        const parentDiv = event.target.parentElement.parentElement.parentElement
+        const cardsDiv = parentDiv.querySelector('.cards-container')
+        const card = document.createElement('div')
+        card.classList.add("card")
+        card.draggable = true
+        card.ondragstart = (event)=> dragstartHandler(event)
+
+        card.innerHTML=`
+        <div>
+           <input type="text"
+           id="task-title" class="card-input"
+           placeholder="Task title"
+           onfocusout ="" />
+        </div>
+        `
+        cardsDiv.append(card)
+    }
+
+</script>
+
+<style>
+    .top-box {
+    display: flex;
+    justify-content: space-between;
+    padding:0.5rem;
+    }
+    .col{
+    padding:1rem;
+    width:100%
+  }
+  .task-title{
+    color:#1A202C;
+  }
+  .cards-container{
+    padding: 1rem 0;
+    display:flex;
+    flex-direction: column;
+    gap: 0.8rem;
+  }
+
+  .add-icon{
+    cursor:pointer;
+  }
+
+
+</style>
