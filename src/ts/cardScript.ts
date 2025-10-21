@@ -133,7 +133,7 @@ export function dropHandler(ev:DragEvent):void{
     if(!taskId) return
     const draggedElement = document.getElementById(taskId) as HTMLElement
     target.appendChild(draggedElement);
-    // const progressId :number = target.id;
+    // const progressId :number = target.id; //This is for method
   }
 
   export function openEmptycard(event:MouseEvent):void{
