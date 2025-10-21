@@ -8,7 +8,7 @@ function activateTab(clickedLi: HTMLLIElement, name: TabName): void {
     const iconName = li.dataset.name as TabName;
     const img = li.querySelector<HTMLImageElement>('img');
     if (img && iconName) {
-      img.src = `/src/assets/${iconName}.svg`; // ícono normal
+      img.src = `/src/assets/${iconName}.svg`; 
     }
   });
 
@@ -19,7 +19,7 @@ function activateTab(clickedLi: HTMLLIElement, name: TabName): void {
   }
 }
 
-// Asignar eventos
+
 document.querySelectorAll<HTMLLIElement>('.kanban-nav li').forEach(li => {
   const name = li.dataset.name as TabName;
   if (name) li.addEventListener('click', () => activateTab(li, name));
