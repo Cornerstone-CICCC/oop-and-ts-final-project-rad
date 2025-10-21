@@ -115,8 +115,9 @@ button {
     
   }
 
-  input.card-input:focus-visible{
+  input.card-input:focus{
     border: none;
+    outline: none;
   }
 
 

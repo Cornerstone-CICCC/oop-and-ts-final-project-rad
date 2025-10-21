@@ -141,6 +141,13 @@ export function dropHandler(ev:DragEvent):void{
     const parentDiv = target.parentElement?.parentElement?.parentElement;
     if(!parentDiv) return
     const cardsDiv = parentDiv.querySelector(".cards-container");
+
+    //check if there is empty card exist or not
+    const findInput  = cardsDiv?.querySelector('.card-input') as (HTMLInputElement | null)
+    if(findInput){
+      findInput.focus()
+      return
+    }
     const card = document.createElement("div");
     card.classList.add("card");
     card.draggable = true;
@@ -155,14 +162,29 @@ export function dropHandler(ev:DragEvent):void{
         </div>
         `;
 
-    card.querySelector("input")?.addEventListener("focusout",(e)=>{
+    const input = card.querySelector("input") as HTMLInputElement
+
+    input.addEventListener("focusout",(e)=>{
       console.log("focusout")
       addInputToTask(e)})
     cardsDiv?.append(card);
+
+    card.scrollIntoView({
+      behavior:'smooth'
+    })
+    input.focus()
   }
 
   export function addInputToTask(event:FocusEvent):void {
     const target = event.target as HTMLInputElement
+    const newTitle = target.value;
+
+    if(!newTitle){
+      const parentCard = target.parentElement?.parentElement
+      parentCard?.remove()
+      return
+    }
+
     const parentDiv =
       target.parentElement?.parentElement?.parentElement?.parentElement;
     
@@ -174,13 +196,13 @@ export function dropHandler(ev:DragEvent):void{
       progressVal === "inProgress"
         ? "In Progress"
         : progressVal[0].toUpperCase() + progressVal.slice(1);
-    const newTitle = target.value;
+  
 
     const newTask:Todo = {
       id: counter+1,
       title: newTitle,
       description: "",
-      priority: 3,
+      priority: 2,
       date: (new Date()).toString(),
       deadline: "",
       progress: progressStr,
