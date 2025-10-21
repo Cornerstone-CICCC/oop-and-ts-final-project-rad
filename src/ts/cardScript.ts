@@ -196,14 +196,17 @@ export function dropHandler(ev:DragEvent):void{
       progressVal === "inProgress"
         ? "In Progress"
         : progressVal[0].toUpperCase() + progressVal.slice(1);
-  
+
+    const today = new Date()
+    const monthNum:number = today.getMonth()+1
+    const createdStr = `${today.getFullYear()}-${monthNum<10?0+monthNum.toString():monthNum}-${today.getDate()}`
 
     const newTask:Todo = {
       id: counter+1,
       title: newTitle,
       description: "",
       priority: 2,
-      date: (new Date()).toString(),
+      date: createdStr,
       deadline: "",
       progress: progressStr,
     };
