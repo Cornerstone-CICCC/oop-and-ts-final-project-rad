@@ -1,0 +1,29 @@
+---
+import { status } from "../ts/cardScript";
+const { item } = Astro.props;
+
+const priorityNum = item.priority;
+const priority = status.find((level) => level.key === priorityNum);
+const bgColorClass =
+  priorityNum === 1 ? "bg-high" : priorityNum === 2 ? "bg-mid" : "bg-low";
+const priorityStr = priority?.state;
+---
+
+<div class="card" draggable="true" id={item.id.toString()}>
+  <div class="task-title">{item.title}</div>
+  <div class=`priority-str ${bgColorClass}`>{priorityStr}</div>
+  <div class="duedate-text">Due: {item.deadline}</div>
+</div>
+
+<script>
+  import { dragstartHandler } from "../ts/cardScript";
+
+  const cards: NodeListOf<HTMLElement> = document.querySelectorAll(`.card`);
+  cards?.forEach((card) =>
+    card.addEventListener("dragstart", (event) => dragstartHandler(event))
+  );
+
+  cards?.forEach((card) =>
+    card.addEventListener("click", () => console.log("modal"))
+  );
+</script>
