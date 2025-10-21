@@ -57,7 +57,7 @@ button {
     padding: 1rem 0;
     display: flex;
     flex-direction: column;
-    gap: 0.8rem;
+    gap: 1rem;
   }
 
   .card {
@@ -118,6 +118,10 @@ button {
   input.card-input:focus{
     border: none;
     outline: none;
+  }
+
+  div.item-modal{
+    display: none;
   }
 
 
