@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap');
+
 /* Initial CSS Setup Start */
 * {
   margin: 0;
@@ -51,6 +53,88 @@ button {
 /* Initial CSS Setup end */
 
 /* section-1 CSS start */
+  .cards-container {
+    min-height: 150px;
+    padding: 1rem 0;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .card {
+    padding:1rem; 
+    background-color: #ffffff;
+    border-radius: 24px;
+    border: solid 1px #e2e8f0;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    gap: 0.7rem;
+    filter: drop-shadow(-2px 5px 10px rgba(23, 23, 23, 0.1));
+    transition: transform 0.3s ease-in-out;
+  }
+
+  .card:hover{
+    transform: translateY(-7px);
+  }
+  .task-title{
+    font-size:18px;
+    font-weight:bold;
+    color:#4A5568;
+  }
+
+  .bg-high {
+    background-color: #ff0000;
+  }
+  .bg-mid {
+    background-color: #f9dd0b;
+  }
+  .bg-low {
+    background-color: #4f46e5;
+  }
+
+  .priority-str {
+    font-size: 10px;
+    padding: 0.2rem 0.6rem;
+    width: fit-content;
+    color: white;
+    border-radius: 25px;
+    font-weight: 600;
+  }
+
+  .duedate-text {
+    font-size: 13px;
+    font-weight: 600;
+    color: #475569;
+  }
+
+  .card-input{
+    border: none;
+    width: 100%;
+    font-size: 16px;
+    padding: 0.5rem;
+    
+  }
+
+  input.card-input:focus{
+    border: none;
+    outline: none;
+  }
+
+  div.item-modal{
+    display: none;
+  }
+
+  div.item-modal.active{
+    display: block;
+  }
+
+  @media screen and (min-width: 768px) {
+    .cards-container {
+      min-height: 330px;
+    }
+  }
+
 
 /* section-1 CSS end */
 
