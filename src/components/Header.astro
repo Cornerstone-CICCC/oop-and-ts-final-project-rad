@@ -1,1 +1,21 @@
-<header></header>
+<header class="kanban-header">
+    <div class="header-top">
+        <div class="header-left">
+            <img src="/src/assets/logo.png" alt="">
+            <h1>Todo Kanban Board</h1>
+        </div>
+        <input type="text" placeholder="Search tasks..." class="search-bar" />
+  </div>
+    <nav class="kanban-nav">
+        <ul>
+            <li data-name="list"><img src="/src/assets/list.svg" alt="List icon" />List</li>
+            <li data-name="board"><img src="/src/assets/board.svg" alt="Board icon" />Board</li>
+            <li data-name="timeline"><img src="/src/assets/timeline.svg" alt="Timeline icon" />Timeline</li>
+            <li data-name="calendar"><img src="/src/assets/calendar.svg" alt="Calendar icon" />Calendar</li>
+            <li data-name="progress"><img src="/src/assets/progress.svg" alt="Progress icon" />Progress</li>
+        </ul>
+    </nav>
+    <script type="module">
+      import '/src/classes/header.ts';
+    </script>
+</header>
