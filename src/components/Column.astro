@@ -1,5 +1,5 @@
 ---
-import type { Todo } from "../ts/cardScript";
+import type { Task } from "../classes/TaskList";
 import TaskCard from "./TaskCard.astro";
 
 const { title, tasks, id } = Astro.props;
@@ -14,7 +14,7 @@ const { title, tasks, id } = Astro.props;
   </div>
   <!-- Card -->
   <div class="cards-container">
-    {tasks.map((task: Todo) => <TaskCard item={task} />)}
+    {tasks.map((task: Task) => <TaskCard item={task} />)}
   </div>
 </div>
 

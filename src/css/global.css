@@ -54,6 +54,7 @@ button {
 
 /* section-1 CSS start */
   .cards-container {
+    min-height: 150px;
     padding: 1rem 0;
     display: flex;
     flex-direction: column;
@@ -124,6 +125,15 @@ button {
     display: none;
   }
 
+  div.item-modal.active{
+    display: block;
+  }
+
+  @media screen and (min-width: 768px) {
+    .cards-container {
+      min-height: 330px;
+    }
+  }
 
 
 /* section-1 CSS end */

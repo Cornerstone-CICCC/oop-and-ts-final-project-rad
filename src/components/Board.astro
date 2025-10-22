@@ -1,31 +1,30 @@
 ---
 import Column from "./Column.astro";
-import { dummydata } from "../ts/cardScript";
-import type { Todo } from "../ts/cardScript";
+import { type Task } from "../classes/TaskList";
+import { taskList } from "../ts/cardScript";
 
-export let counter: number = dummydata.length;
+const tasks: Task[] = taskList.getAll();
 
-const todos: Todo[] = dummydata.filter((item) => item.progress === "Todo");
-const inProgress: Todo[] = dummydata.filter(
-  (item) => item.progress === "In Progress"
+const todos: Task[] = tasks.filter((item) => item.progress === "todo");
+const inProgress: Task[] = tasks.filter(
+  (item) => item.progress === "in-progress"
 );
-const completed: Todo[] = dummydata.filter(
-  (item) => item.progress === "Completed"
-);
+const completed: Task[] = tasks.filter((item) => item.progress === "done");
 ---
 
 <div class="container">
   <div class="sub-container">
     <!-- Column -->
     <Column title={"To Do"} tasks={todos} id={"todo"} />
-    <Column title={"In Progress"} tasks={inProgress} id={"inProgress"} />
-    <Column title={"Completed"} tasks={completed} id={"completed"} />
+    <Column title={"In Progress"} tasks={inProgress} id={"in-progress"} />
+    <Column title={"Completed"} tasks={completed} id={"done"} />
   </div>
 </div>
 
 <style>
   .container {
     background-color: #f5f7fa;
+    padding-bottom: 5rem;
   }
 
   .sub-container {

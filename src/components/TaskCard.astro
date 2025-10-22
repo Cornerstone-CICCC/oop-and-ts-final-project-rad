@@ -1,18 +1,15 @@
 ---
-import { status } from "../ts/cardScript";
 const { item } = Astro.props;
 
-const priorityNum = item.priority;
-const priority = status.find((level) => level.key === priorityNum);
+const priority = item.priority;
 const bgColorClass =
-  priorityNum === 1 ? "bg-high" : priorityNum === 2 ? "bg-mid" : "bg-low";
-const priorityStr = priority?.state;
+  priority === "high" ? "bg-high" : priority === "medium" ? "bg-mid" : "bg-low";
 ---
 
 <div class="card" draggable="true" id={item.id.toString()}>
   <div class="task-title">{item.title}</div>
-  <div class=`priority-str ${bgColorClass}`>{priorityStr}</div>
-  <div class="duedate-text">Due: {item.deadline}</div>
+  <div class=`priority-str ${bgColorClass}`>{priority}</div>
+  {item.deadline && <div class="duedate-text">Due: {item.deadline}</div>}
 </div>
 <!-- Modal can be below -->
 <div class="item-modal"></div>
@@ -26,6 +23,10 @@ const priorityStr = priority?.state;
   );
 
   cards?.forEach((card) =>
-    card.addEventListener("click", () => console.log("modal"))
+    card.addEventListener("click", () =>
+      (document.querySelector(".item-modal") as HTMLDivElement)?.classList.add(
+        ".item-modal"
+      )
+    )
   );
 </script>
