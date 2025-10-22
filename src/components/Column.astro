@@ -1,0 +1,59 @@
+---
+import type { Todo } from "../ts/cardScript";
+import TaskCard from "./TaskCard.astro";
+
+const { title, tasks, id } = Astro.props;
+---
+
+<div class="col" id={id}>
+  <div class="top-box">
+    <h2 class="h2-title">{title}</h2>
+    <div>
+      <img src="../../public/Plus.svg" alt="add icon" class="add-icon" />
+    </div>
+  </div>
+  <!-- Card -->
+  <div class="cards-container">
+    {tasks.map((task: Todo) => <TaskCard item={task} />)}
+  </div>
+</div>
+
+<script>
+  import {
+    dragoverHandler,
+    dropHandler,
+    openEmptycard,
+  } from "../ts/cardScript";
+
+  const cols: NodeListOf<HTMLElement> = document.querySelectorAll(".col");
+  cols.forEach((col) =>
+    col.addEventListener("drop", (event) => dropHandler(event))
+  );
+  cols.forEach((col) =>
+    col.addEventListener("dragover", (event) => dragoverHandler(event))
+  );
+
+  const addIcons: NodeListOf<HTMLElement> =
+    document.querySelectorAll(".add-icon");
+  addIcons.forEach((icon) =>
+    icon.addEventListener("click", (event) => openEmptycard(event))
+  );
+</script>
+
+<style>
+  .top-box {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.5rem;
+  }
+  .col {
+    padding: 2rem;
+    width: 100%;
+  }
+  .task-title {
+    color: #1a202c;
+  }
+  .add-icon {
+    cursor: pointer;
+  }
+</style>

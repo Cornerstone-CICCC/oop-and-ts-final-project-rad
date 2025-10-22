@@ -1,0 +1,45 @@
+---
+import Column from "./Column.astro";
+import { dummydata } from "../ts/cardScript";
+import type { Todo } from "../ts/cardScript";
+
+export let counter: number = dummydata.length;
+
+const todos: Todo[] = dummydata.filter((item) => item.progress === "Todo");
+const inProgress: Todo[] = dummydata.filter(
+  (item) => item.progress === "In Progress"
+);
+const completed: Todo[] = dummydata.filter(
+  (item) => item.progress === "Completed"
+);
+---
+
+<div class="container">
+  <div class="sub-container">
+    <!-- Column -->
+    <Column title={"To Do"} tasks={todos} id={"todo"} />
+    <Column title={"In Progress"} tasks={inProgress} id={"inProgress"} />
+    <Column title={"Completed"} tasks={completed} id={"completed"} />
+  </div>
+</div>
+
+<style>
+  .container {
+    background-color: #f5f7fa;
+  }
+
+  .sub-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 1rem;
+  }
+
+  @media screen and (min-width: 768px) {
+    .sub-container {
+      flex-direction: row;
+      max-width: 1800px;
+      margin: 0 auto;
+    }
+  }
+</style>
