@@ -4,12 +4,17 @@ const { item } = Astro.props;
 const priority = item.priority;
 const bgColorClass =
   priority === "high" ? "bg-high" : priority === "medium" ? "bg-mid" : "bg-low";
+const deadline: Date = item.deadline;
+const year: number = deadline.getFullYear();
+const month: number = deadline.getMonth() + 1;
+const date: number = deadline.getDate();
+const deadlineStr = `${year}-${month}-${date}`;
 ---
 
 <div class="card" draggable="true" id={item.id.toString()}>
   <div class="task-title">{item.title}</div>
   <div class=`priority-str ${bgColorClass}`>{priority}</div>
-  {item.deadline && <div class="duedate-text">Due: {item.deadline}</div>}
+  {item.deadline && <div class="duedate-text">Due: {deadlineStr}</div>}
 </div>
 <!-- Modal can be below -->
 <div class="item-modal"></div>
