@@ -56,6 +56,458 @@ button {
 
 /* section-2 CSS start */
 
+.modal-btn {
+  width: auto;
+  height: auto;
+  border: 1px solid #ccc;
+  padding: 10px;
+}
+
+dialog {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+dialog::backdrop {
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+#addModal .modal-write {
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  max-width: 400px;
+  width: 100%;
+  text-align: left;
+  position: relative;
+}
+
+#todoForm {
+  width: 100%;
+  height: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 20px;
+}
+
+#todoForm .btn-wrapper {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+  margin-top: 20px;
+}
+
+.btn-wrapper .addlist-add-btn {
+  width: auto;
+  height: auto;
+  background-color: #4f46e5;
+  padding: 10px;
+  color: white;
+  cursor: pointer;
+  border-radius: 20px;
+}
+
+.btn-wrapper .addlist-cancle-btn {
+  width: auto;
+  height: auto;
+  background-color: #ccc;
+  padding: 10px;
+  color: white;
+  cursor: pointer;
+  border-radius: 20px;
+}
+
+.modal-write h2 {
+  font-size: 36px;
+  text-wrap: nowrap;
+  margin-bottom: 15px;
+}
+
+#todoForm {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+#todoForm p {
+  width: 100%;
+  height: auto;
+}
+
+#todoForm label {
+  display: block;
+  font-weight: 600;
+  color: #444;
+  margin-bottom: 6px;
+}
+
+#todoForm input[type="text"],
+#todoForm textarea,
+#todoForm input[type="date"] {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 15px;
+  transition: border 0.2s, box-shadow 0.2s;
+}
+
+#todoForm input:focus,
+#todoForm textarea:focus,
+#todoForm input[type="date"]:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+  outline: none;
+}
+
+#todoForm textarea {
+  resize: vertical;
+  min-height: 70px;
+}
+
+/* --- Radio Group --- */
+.radio-group {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 15px;
+  flex-wrap: nowrap;
+}
+
+.radio-group label {
+  display: flex;
+  font-weight: normal;
+  gap: 6px;
+  background: #f8f9fa;
+  padding: 6px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: all 0.2s;
+  font-size: 14px;
+
+  background-clip: padding-box;
+}
+/*
+.radio-group label:hover {
+  background: #eef4ff;
+  border-color: #007bff;
+}
+
+.radio-group input[type="radio"] {
+  accent-color: #007bff;
+}
+*/
+.priority-badge {
+  display: inline-block;
+  padding: 5px 12px;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #fff;
+  text-align: center;
+  cursor: default;
+}
+
+.priority-high {
+  background-color: #4f46e5;
+  color: white;
+  padding: 6px 12px;
+  border-radius: 8px;
+}
+
+.priority-mid {
+  background-color: #f9dd0b;
+}
+
+.priority-low {
+  background-color: #ff0000;
+}
+
+/* --- Buttons --- */
+.btn-wrapper {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.addlist-add-btn,
+#todoForm button[type="submit"] {
+  padding: 10px 16px;
+  border: none;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  background-color: #4f46e5;
+  color: white;
+  transition: background-color 0.2s, transform 0.1s;
+}
+
+.addlist-cancle-btn {
+  padding: 10px 16px;
+  border: 1px solid #ccc;
+  background-color: #f9f9f9;
+  color: #333;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.1s;
+}
+
+.modal-content {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 20px;
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  max-width: 400px;
+  width: 100%;
+  text-align: left;
+  position: relative;
+}
+
+.modal-content #modalTitle {
+  font-size: 36px;
+  text-wrap: nowrap;
+}
+
+.modal-content #modalDesc {
+  font-size: 20px;
+}
+
+.progress-badge {
+  display: inline-block;
+  padding: 5px 12px;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #fff;
+  text-align: center;
+  cursor: default;
+}
+
+.todo {
+  background-color: #ff9800;
+  margin-left: 10px;
+}
+
+.progress-badge {
+  background-color: #2196f3;
+  margin-left: 10px;
+}
+
+.completed {
+  background-color: #4caf50;
+  margin-left: 10px;
+}
+
+.priority-badge {
+  display: inline-block;
+  padding: 5px 12px;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #fff;
+  text-align: center;
+  cursor: default;
+}
+
+.high {
+  background-color: #4f46e5;
+  margin-left: 10px;
+}
+
+.medium {
+  background-color: #f9dd0b;
+  margin-left: 10px;
+}
+
+.low {
+  background-color: #ff0000;
+  margin-left: 10px;
+}
+
+.btn-wrapper {
+  display: flex;
+  gap: 10px;
+  margin-left: auto;
+  margin-top: 20px;
+}
+
+.btn-wrapper .todo-modify-btn {
+  width: auto;
+  height: auto;
+  background-color: #ff0000;
+  padding: 10px;
+  color: white;
+  cursor: pointer;
+  border-radius: 20px;
+}
+
+.btn-wrapper .todo-delete-btn {
+  width: auto;
+  height: auto;
+  background-color: #4f46e5;
+  padding: 10px;
+  color: white;
+  cursor: pointer;
+  border-radius: 20px;
+}
+
+.modal-content .close-btn {
+  position: absolute;
+  top: 20px;
+  right: 5px;
+  font-size: 22px;
+  cursor: pointer;
+}
+
+.modal-write .close-btn {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  font-size: 22px;
+  cursor: pointer;
+}
+
+#modifyModal {
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  max-width: 400px;
+  width: 100%;
+  text-align: left;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border: 1px solid #ccc;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+#modifyModal::backdrop {
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+#modifyModal .modal-modify {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+#modifyForm {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 18px;
+}
+
+#modifyForm p {
+  width: 100%;
+  height: auto;
+}
+
+#modifyForm label {
+  display: block;
+  font-weight: 600;
+  color: #444;
+  margin-bottom: 6px;
+}
+
+#modifyForm input[type="text"],
+#modifyForm textarea,
+#modifyForm input[type="date"] {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 15px;
+  transition: border 0.2s, box-shadow 0.2s;
+}
+
+#modifyForm input:focus,
+#modifyForm textarea:focus,
+#modifyForm input[type="date"]:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+  outline: none;
+}
+
+#modifyForm textarea {
+  resize: vertical;
+  min-height: 70px;
+}
+
+#modifyForm .radio-group {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 15px;
+  flex-wrap: nowrap;
+}
+
+#modifyForm .radio-group label {
+  display: flex;
+  gap: 6px;
+  background: #f8f9fa;
+  padding: 6px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: all 0.2s;
+  font-size: 14px;
+}
+
+#modifyForm .btn-wrapper {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+  margin-top: 20px;
+}
+
+#modifyForm .addlist-modify-btn {
+  width: auto;
+  height: auto;
+  background-color: #4f46e5;
+  padding: 10px;
+  color: white;
+  cursor: pointer;
+  border-radius: 20px;
+  font-weight: 600;
+}
+
+#modifyForm .addlist-cancle-btn {
+  width: auto;
+  height: auto;
+  background-color: #ccc;
+  padding: 10px;
+  color: white;
+  cursor: pointer;
+  border-radius: 20px;
+  font-weight: 600;
+}
+
+#modifyModal .close-btn {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  font-size: 22px;
+  cursor: pointer;
+}
+
 /* section-2 CSS end */
 
 /* section-3 CSS start */
