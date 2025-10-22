@@ -1,3 +1,6 @@
+
+export type ColumnType = 'todo' | 'in-progress' | 'done';
+
 export interface Task {
   id: number;
   title: string;
@@ -6,14 +9,16 @@ export interface Task {
   completed: boolean;
   date: Date;
   deadline?: Date;
-  progress: string
+  progress: ColumnType
 }
 
 export class TaskList {
   private tasks: Task[] = [];
   private nextId = 1
 
-  add(title: string, priority: string, progress: string, description?: string, deadline?: Date): Task {
+
+  //add task by id
+  add(title: string, priority: string, progress: ColumnType, description?: string, deadline?: Date): Task {
     const task: Task = {
       id: this.nextId++,
       title,
@@ -27,14 +32,14 @@ export class TaskList {
     this.tasks.push(task);
     return task;
   }
-
+  //update task by id
   update(id: number,updates: {
       title?: string;
       description?: string;
       priority?: string;
       completed?: boolean;
       deadline?: Date;
-      progress?: string;
+      progress?: ColumnType;
     }): Task | null {
     const task = this.tasks.find(t => t.id === id);
     if (!task) return null;
@@ -49,6 +54,7 @@ export class TaskList {
     return task;
   }
 
+  //delete ask by id
   delete(id: number): boolean {
     const index = this.tasks.findIndex(t => t.id === id);
     if (index === -1) return false;
@@ -68,7 +74,7 @@ export class TaskList {
     return task;
   }
 
-  onDrop(id: number, targetColumn: string): Task | null {
+  onDrop(id: number, targetColumn: ColumnType): Task | null {
     const task = this.tasks.find(t => t.id === id);
     if (!task) return null;
     task.progress = targetColumn;
