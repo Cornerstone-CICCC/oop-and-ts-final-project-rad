@@ -160,9 +160,10 @@ import { todoContext, Priority, type Progress } from "../ts/TodoContext";
   </div>
 </dialog>
 
+<div id="snackbar">Todo List has been added to your list</div>
+
 <script>    
     import { todoContext, Priority, type Progress, type Todo } from "../ts/TodoContext";
-    
     
     const viewModal = document.getElementById("viewModal");
     const viewModalTyped = viewModal as HTMLDialogElement | null;
@@ -184,6 +185,21 @@ import { todoContext, Priority, type Progress } from "../ts/TodoContext";
     const todoModifyBtn = document.querySelector(".todo-modify-btn") as HTMLButtonElement | null;
     const todoDeleteBtn = document.querySelector(".todo-delete-btn") as HTMLButtonElement | null;
 
+    const snackbar = document.querySelector("#snackbar") as HTMLElement | null;
+
+    const showSnackbar = (message:string, type:string) => {
+        if (!snackbar) return;
+
+        snackbar.textContent = message;
+
+        snackbar.className = ''; 
+        snackbar.classList.add(type); 
+        snackbar.classList.add("show"); 
+
+        setTimeout(() => {
+            snackbar.classList.remove("show");
+        }, 3000);
+    }
 
     const deleteTodoList = (id: number) => {
         todoContext.deleteTodo(id); 
@@ -223,6 +239,7 @@ import { todoContext, Priority, type Progress } from "../ts/TodoContext";
                 if (todoModifyBtn) {
                     todoModifyBtn.dataset.modifyId = todoId;
                 }
+
                 if (todoDeleteBtn) {
                     todoDeleteBtn.dataset.deleteId = todoId;
                 }
@@ -292,6 +309,7 @@ import { todoContext, Priority, type Progress } from "../ts/TodoContext";
 
         if (userConfirmed && idToDelete) {
             deleteTodoList(Number(idToDelete));
+            showSnackbar('Todo List has been deleted.', 'delete')
         }
     });
     
@@ -330,6 +348,8 @@ import { todoContext, Priority, type Progress } from "../ts/TodoContext";
         todoContext.addTodo(newTodo);
         addModal?.close();
         todoForm.reset();
+
+        showSnackbar('Todo List has been added successfully.', 'success')
     });
 
     modifyForm?.addEventListener("submit", (e) => {
@@ -353,6 +373,8 @@ import { todoContext, Priority, type Progress } from "../ts/TodoContext";
         todoContext.updateTodo(Number(modifyId), updatedData);
         modifyModal?.close();
         modifyForm.reset();
+
+        showSnackbar('Todo List has been modified successfully.', 'success')
     });
 
     closeModalBtn?.addEventListener("click", () => viewModalTyped?.close());
@@ -362,5 +384,7 @@ import { todoContext, Priority, type Progress } from "../ts/TodoContext";
     
     const modifyCancleBtn = modifyModal?.querySelector(".addlist-cancle-btn") as HTMLButtonElement | null;
     modifyCancleBtn?.addEventListener("click", () => modifyModal?.close());
+
+
 
 </script>
