@@ -1,9 +1,12 @@
 ---
+import Layout from "../layouts/Layout.astro"
 import Board from "../components/Board.astro";
-import Layout from "../layouts/Layout.astro";
+import Modal from "../components/Modal.astro"
 const Pagetitle = "Home";
----
 
+---
+  
 <Layout title={Pagetitle}>
   <Board />
+  <Modal />
 </Layout>
