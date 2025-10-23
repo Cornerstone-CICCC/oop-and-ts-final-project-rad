@@ -1,6 +1,7 @@
 ---
-import type { ColumnType } from "../classes/kanboard"; 
+import type { ColumnType } from "../classes/kanboard";
 import type { Todo } from "../ts/TodoContext";
+import TaskCard from "./TaskCard.astro";
 
 interface Props {
   title: string;
@@ -18,40 +19,42 @@ const { title, tasks, id } = Astro.props;
       <img src="../../public/Plus.svg" alt="add icon" class="add-icon" />
     </div>
   </div>
-  <div class="cards-container">
-    </div>
+  <div class="cards-container"></div>
 </div>
 
 <script>
   import {
     dragoverHandler,
     dropHandler,
+    openEmptycard,
   } from "../ts/KanbanController";
 
-import { openAddModal } from "../ts/ModalController";
+  import { openAddModal } from "../ts/ModalController";
 
   const cols: NodeListOf<HTMLElement> = document.querySelectorAll(".col");
   cols.forEach((col) =>
     col.addEventListener("drop", (event) => dropHandler(event as DragEvent))
   );
   cols.forEach((col) =>
-    col.addEventListener("dragover", (event) => dragoverHandler(event as DragEvent))
+    col.addEventListener("dragover", (event) =>
+      dragoverHandler(event as DragEvent)
+    )
   );
 
   const addIcons: NodeListOf<HTMLElement> =
     document.querySelectorAll(".add-icon");
   addIcons.forEach((icon) =>
     icon.addEventListener("click", (event) => {
-        event.preventDefault(); 
-        
-        if (openAddModal) {
-            openAddModal();
-        } else {
-            (document.querySelector("#addModal") as HTMLDialogElement)?.showModal();
-        }
-      }
-    
-  ));
+      openEmptycard(event);
+      // event.preventDefault();
+
+      // if (openAddModal) {
+      //     openAddModal();
+      // } else {
+      //     (document.querySelector("#addModal") as HTMLDialogElement)?.showModal();
+      // }
+    })
+  );
 </script>
 
 <style>

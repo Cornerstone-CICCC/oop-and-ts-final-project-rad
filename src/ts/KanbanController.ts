@@ -3,7 +3,7 @@ import { KanbanBoard } from "../classes/kanboard";
 
 export type ColumnType = "todo" | "in-progress" | "done";
 
-const kanbanBoard = new KanbanBoard();
+export const kanbanBoard = new KanbanBoard();
 
 export function dragstartHandler(ev: DragEvent): void {
   const target = ev.target as HTMLDivElement;
