@@ -198,9 +198,48 @@ export const handleTodoSubmit = (e: Event) => {
 
   const formData = new FormData(todoForm);
   const title = formData.get("title") as string;
+  const description = formData.get("description") as string;
+  const checkedProgressInput = todoForm.querySelector(
+    'input[name="progress"]:checked'
+  );
+  const checkedPriorityInput = todoForm.querySelector(
+    'input[name="priority"]:checked'
+  );
+
+  const deadlineInput = todoForm.querySelector(
+    'input[name="deadline"]'
+  ) as HTMLInputElement;
+  const deadlineValue = deadlineInput.value;
+
+  if (deadlineValue) {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    const selectedDate = new Date(deadlineValue);
+
+    if (selectedDate < today) {
+      showSnackbar("The deadline must be set to today or later.", "failure");
+      return;
+    }
+  }
 
   if (!title.trim()) {
     showSnackbar("Title is required.", "failure");
+    return;
+  }
+
+  if (!description.trim()) {
+    showSnackbar("description is required.", "failure");
+    return;
+  }
+
+  if (!checkedProgressInput) {
+    showSnackbar("Progress must be selected.", "failure");
+    return;
+  }
+
+  if (!checkedPriorityInput) {
+    showSnackbar("Priority must be selected.", "failure");
     return;
   }
 
@@ -231,23 +270,62 @@ export const handleModifySubmit = (e: Event) => {
   if (!modifyForm) return;
 
   const formData = new FormData(modifyForm);
-  const modifyId = modifyForm.dataset.modifyId;
-  const title = formData.get("title") as string;
 
-  if (!modifyId || !title.trim()) {
-    showSnackbar("Modification failed: Task ID or Title missing.", "failure");
+  const modifyId = Number(modifyForm.dataset.modifyId);
+
+  const title = formData.get("title") as string;
+  const description = formData.get("description") as string;
+
+  const progressValue = formData.get("progress");
+  const priorityValue = formData.get("priority");
+
+  const deadlineInput = modifyForm.querySelector(
+    'input[name="deadline"]'
+  ) as HTMLInputElement;
+
+  const deadlineValue = deadlineInput?.value || "";
+
+  if (!title.trim()) {
+    showSnackbar("Title is required.", "failure");
     return;
+  }
+
+  if (!description.trim()) {
+    showSnackbar("Description is required.", "failure");
+    return;
+  }
+
+  if (!progressValue) {
+    showSnackbar("Progress must be selected.", "failure");
+    return;
+  }
+
+  if (!priorityValue) {
+    showSnackbar("Priority must be selected.", "failure");
+    return;
+  }
+
+  if (deadlineValue) {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    const selectedDate = new Date(deadlineValue);
+
+    if (selectedDate < today) {
+      showSnackbar("The deadline must be set to today or later.", "failure");
+      return;
+    }
   }
 
   const updatedData = {
     title: title,
-    description: formData.get("description") as string,
-    progress: formData.get("progress") as Progress,
-    priority: Number(formData.get("priority")) as Priority,
-    deadline: formData.get("deadline") as string,
+    description: description,
+    progress: progressValue as Progress,
+    priority: Number(priorityValue) as Priority,
+    deadline: deadlineValue,
   };
 
-  todoContext.updateTodo(Number(modifyId), updatedData);
+  todoContext.updateTodo(modifyId, updatedData);
   modifyModal?.close();
   modifyForm.reset();
 
@@ -295,8 +373,37 @@ export const attachAddListener = () => {
 
 export const attachCancelListeners = () => {
   closeModalBtn?.addEventListener("click", () => viewModalTyped?.close());
-  addlistCancleBtn?.addEventListener("click", () => addModal?.close());
-  modifyCancleBtn?.addEventListener("click", () => modifyModal?.close());
+  //addlistCancleBtn?.addEventListener("click", () => addModal?.close());
+  //modifyCancleBtn?.addEventListener("click", () => modifyModal?.close());
+
+  const addCancelBtn = document.querySelector("#addModal .addlist-cancle-btn");
+  const modifyCancelBtn = document.querySelector(
+    "#modifyForm .addlist-cancle-btn"
+  );
+
+  [addCancelBtn, modifyCancelBtn].forEach((btn) => {
+    if (btn) {
+      btn.addEventListener("click", (e) => {
+        e.preventDefault();
+
+        const modal = btn.closest("dialog");
+        modal?.close();
+      });
+    }
+  });
+};
+
+export const attachViewModalCloseListener = () => {
+  const viewModal = document.getElementById(
+    "viewModal"
+  ) as HTMLDialogElement | null;
+  const closeModalBtn = document.querySelector("#viewModal .close-btn");
+
+  if (closeModalBtn && viewModal) {
+    closeModalBtn.addEventListener("click", () => {
+      viewModal.close();
+    });
+  }
 };
 
 export const openViewModalById = (todoId: number) => {

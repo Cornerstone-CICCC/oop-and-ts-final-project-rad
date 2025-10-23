@@ -178,7 +178,8 @@ import { todoContext, Priority, type Progress } from "../ts/TodoContext";
         attachDeleteListener, 
         attachModifyListener, 
         attachAddListener,    
-        attachCancelListeners 
+        attachCancelListeners ,
+        attachViewModalCloseListener
     } from "../ts/ModalController";
 
     attachDeleteListener();
@@ -189,5 +190,6 @@ import { todoContext, Priority, type Progress } from "../ts/TodoContext";
     modifyForm?.addEventListener("submit", handleModifySubmit);
 
     attachCancelListeners();
+    attachViewModalCloseListener();
 
 </script>
