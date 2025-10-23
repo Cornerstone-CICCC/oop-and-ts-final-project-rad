@@ -1,5 +1,6 @@
+import { KanbanBoard } from "../classes/kanboard";
 import { TaskList, type ColumnType, type Task } from "../classes/TaskList";
-export const taskList = new TaskList()
+export const board = new KanbanBoard()
 
 export function dragstartHandler(ev:DragEvent):void {
     const target = ev.target as HTMLDivElement
@@ -25,8 +26,7 @@ export function dropHandler(ev:DragEvent):void{
     subContainer.appendChild(draggedElement);
     const progressId = container?.id as ColumnType; //This is for method
     console.log(progressId)
-    taskList.update(taskIdNum, {progress:`${progressId}`})
-    console.log(taskList.getAll())
+    board.moveTask(taskIdNum,progressId)
   }
 
   export function openEmptycard(event:MouseEvent):void{
@@ -93,7 +93,7 @@ export function dropHandler(ev:DragEvent):void{
       if(!parentDiv) return
     const progressVal = parentDiv.id as ColumnType
 
-    taskList.add(newTitle, "medium" , progressVal)
+    board.addTask(newTitle, "medium" , progressVal)
     render()
   }
 
@@ -103,17 +103,12 @@ export function render():void{
   cardDivs.forEach(cardDiv=>cardDiv.innerHTML="")
 
   //get all task
-  const tasks = taskList.getAll()
+  board.initializeBoard()
 
   //Filter tasks
-  const todos: Task[] = tasks.filter((item) => item.progress === "todo");
-  const inProgress: Task[] = tasks.filter(
-    (item) => item.progress === "in-progress"
-  );
-  const completed: Task[] = tasks.filter(
-    (item) => item.progress === "done"
-  );
-
+  const todos: Task[] = board.getColumn('todo')
+  const inProgress: Task[] = board.getColumn('in-progress')
+  const completed: Task[] = board.getColumn('done')
   //Find each container and assign to each container
   const todoDiv = document.querySelector('#todo .cards-container') as HTMLDivElement
   const inProgressDiv = document.querySelector('#in-progress .cards-container') as HTMLDivElement
