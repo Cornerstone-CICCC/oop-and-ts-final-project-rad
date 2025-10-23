@@ -23,10 +23,7 @@ export class TodoContext {
   private listeners: Listener[] = [];
 
   constructor() {
-    if (typeof window !== "undefined") {
-      const saved = localStorage.getItem("todos");
-      this.todos = saved ? JSON.parse(saved) : [];
-    }
+    this.loadTodos();
   }
 
   addTodo(todo: Todo): void {
@@ -47,12 +44,13 @@ export class TodoContext {
     return this.todos;
   }
 
-  updateTodo(id: number, updatedData: Partial<Todo>): void {
-    this.todos = this.todos.map((todo) =>
-      todo.id === id ? { ...todo, ...updatedData } : todo
-    );
-    this.saveToLocalStorage();
-    this.notifyListeners();
+  updateTodo(id: number, updatedFields: Partial<Todo>): void {
+    const index = this.todos.findIndex((todo) => todo.id === id);
+    if (index !== -1) {
+      this.todos[index] = { ...this.todos[index], ...updatedFields };
+      this.saveToLocalStorage();
+      this.notifyListeners();
+    }
   }
 
   deleteTodo(id: number): void {

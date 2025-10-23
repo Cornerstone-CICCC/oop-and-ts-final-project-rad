@@ -1,0 +1,353 @@
+import { todoContext, Priority, type Progress, type Todo } from "./TodoContext";
+
+export const viewModal = document.getElementById("viewModal");
+export const viewModalTyped = viewModal as HTMLDialogElement | null;
+export const closeModalBtn = viewModalTyped?.querySelector(
+  ".close-btn"
+) as HTMLButtonElement | null;
+export const modalTitle = document.getElementById(
+  "modalTitle"
+) as HTMLElement | null;
+export const modalDesc = document.getElementById(
+  "modalDesc"
+) as HTMLElement | null;
+export const progressBadge = document.getElementById(
+  "progressBadge"
+) as HTMLElement | null;
+export const priorityBadge = document.getElementById(
+  "periorityBadge"
+) as HTMLElement | null;
+export const modalRegiste = document.getElementById(
+  "registe"
+) as HTMLElement | null;
+export const modalDeadline = document.getElementById(
+  "deadline"
+) as HTMLElement | null;
+export const listContainer = document.getElementById("todo-list-container");
+
+export const addModal = document.getElementById(
+  "addModal"
+) as HTMLDialogElement | null;
+export const addBtn = document.querySelector(
+  ".add-btn"
+) as HTMLButtonElement | null;
+export const todoForm = document.getElementById(
+  "todoForm"
+) as HTMLFormElement | null;
+
+export const modifyModal = document.getElementById(
+  "modifyModal"
+) as HTMLDialogElement | null;
+export const modifyForm = document.getElementById(
+  "modifyForm"
+) as HTMLFormElement | null;
+export const todoModifyBtn = document.querySelector(
+  ".todo-modify-btn"
+) as HTMLButtonElement | null;
+export const todoDeleteBtn = document.querySelector(
+  ".todo-delete-btn"
+) as HTMLButtonElement | null;
+
+export const snackbar = document.querySelector(
+  "#snackbar"
+) as HTMLElement | null;
+
+export const showSnackbar = (message: string, type: string) => {
+  if (!snackbar) return;
+
+  snackbar.textContent = message;
+
+  snackbar.className = "";
+  snackbar.classList.add(type);
+  snackbar.classList.add("show");
+
+  setTimeout(() => {
+    snackbar.classList.remove("show");
+  }, 3000);
+};
+
+export const addlistCancleBtn = addModal?.querySelector(
+  ".addlist-cancle-btn"
+) as HTMLButtonElement | null;
+export const modifyCancleBtn = modifyModal?.querySelector(
+  ".addlist-cancle-btn"
+) as HTMLButtonElement | null;
+
+export const deleteTodoList = (id: number) => {
+  todoContext.deleteTodo(id);
+  viewModalTyped?.close();
+};
+
+export const openModifyModal = (todoId: number) => {
+  const todo = todoContext.getTodos().find((t) => t.id === todoId);
+  if (!todo || !modifyModal || !modifyForm) return;
+
+  const modifyTitle = modifyModal.querySelector("h2") as HTMLElement | null;
+  if (modifyTitle) {
+    modifyTitle.textContent = "Modify Task";
+  }
+
+  viewModalTyped?.close();
+
+  (modifyForm.querySelector("#title") as HTMLInputElement).value = todo.title;
+  (modifyForm.querySelector("#description") as HTMLTextAreaElement).value =
+    todo.description;
+
+  (
+    modifyForm.querySelector(
+      `input[name="progress"][value="${todo.progress}"]`
+    ) as HTMLInputElement
+  ).checked = true;
+  (
+    modifyForm.querySelector(
+      `input[name="priority"][value="${String(todo.priority)}"]`
+    ) as HTMLInputElement
+  ).checked = true;
+
+  (
+    modifyForm.querySelector(`input[name="deadline"]`) as HTMLInputElement
+  ).value = todo.deadline;
+
+  modifyForm.dataset.modifyId = String(todo.id);
+
+  modifyModal.showModal();
+};
+
+export const attachViewModalListeners = () => {
+  const todoListData = todoContext.getTodos();
+
+  document
+    .querySelectorAll<HTMLButtonElement>("#todo-list-container .modal-btn")
+    .forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const todoId = btn.dataset.id;
+        const todo = todoListData.find((t: any) => String(t.id) === todoId);
+
+        if (!todo) return;
+
+        if (todoModifyBtn) {
+          todoModifyBtn.dataset.modifyId = todoId;
+        }
+
+        if (todoDeleteBtn) {
+          todoDeleteBtn.dataset.deleteId = todoId;
+        }
+
+        if (modalTitle) modalTitle.textContent = todo.title;
+        if (modalDesc)
+          modalDesc.textContent = "Description: " + todo.description;
+        if (progressBadge) {
+          progressBadge.textContent = todo.progress;
+          progressBadge.className = "progress-badge";
+
+          if (todo.progress === "Todo") {
+            progressBadge.classList.add("todo");
+          } else if (todo.progress === "In Progress") {
+            progressBadge.classList.add("inprogress");
+          } else if (todo.progress === "Completed") {
+            progressBadge.classList.add("completed");
+          }
+        }
+
+        if (priorityBadge) {
+          priorityBadge.className = "priority-badge";
+
+          if (todo.priority === 1) {
+            priorityBadge.classList.add("high");
+            priorityBadge.textContent = "High";
+          } else if (todo.priority === 2) {
+            priorityBadge.classList.add("medium");
+            priorityBadge.textContent = "Medium";
+          } else if (todo.priority === 3) {
+            priorityBadge.classList.add("low");
+            priorityBadge.textContent = "Low";
+          }
+        }
+
+        if (modalRegiste) modalRegiste.textContent = "Registe: " + todo.date;
+        if (modalDeadline)
+          modalDeadline.textContent = "Deadline: " + todo.deadline;
+
+        viewModalTyped?.showModal();
+      });
+    });
+};
+
+/* Before committing temporary code
+export const renderTodoList = (todos: Todo[]) => {
+  if (!listContainer) return;
+
+  listContainer.innerHTML = "";
+
+  todos.forEach((todo) => {
+    const button = document.createElement("button");
+    button.className = "modal-btn";
+    button.dataset.id = String(todo.id);
+    button.textContent = todo.title;
+    listContainer.appendChild(button);
+  });
+
+  attachViewModalListeners();
+};
+*/
+
+export const handleTodoSubmit = (e: Event) => {
+  e.preventDefault();
+
+  if (!todoForm) return;
+
+  const formData = new FormData(todoForm);
+  const title = formData.get("title") as string;
+
+  if (!title.trim()) {
+    showSnackbar("Title is required.", "failure");
+    return;
+  }
+
+  const today = new Date();
+  const yyyy = today.getFullYear();
+  const mm = String(today.getMonth() + 1).padStart(2, "0");
+  const dd = String(today.getDate()).padStart(2, "0");
+
+  const newTodo: Todo = {
+    id: Date.now(),
+    title: title,
+    description: formData.get("description") as string,
+    progress: formData.get("progress") as Progress,
+    priority: Number(formData.get("priority")) as Priority,
+    deadline: formData.get("deadline") as string,
+    date: `${yyyy}-${mm}-${dd}`,
+  };
+  todoContext.addTodo(newTodo);
+  addModal?.close();
+  todoForm.reset();
+
+  showSnackbar("Todo List has been added successfully.", "success");
+};
+
+export const handleModifySubmit = (e: Event) => {
+  e.preventDefault();
+
+  if (!modifyForm) return;
+
+  const formData = new FormData(modifyForm);
+  const modifyId = modifyForm.dataset.modifyId;
+  const title = formData.get("title") as string;
+
+  if (!modifyId || !title.trim()) {
+    showSnackbar("Modification failed: Task ID or Title missing.", "failure");
+    return;
+  }
+
+  const updatedData = {
+    title: title,
+    description: formData.get("description") as string,
+    progress: formData.get("progress") as Progress,
+    priority: Number(formData.get("priority")) as Priority,
+    deadline: formData.get("deadline") as string,
+  };
+
+  todoContext.updateTodo(Number(modifyId), updatedData);
+  modifyModal?.close();
+  modifyForm.reset();
+
+  showSnackbar("Todo List has been modified successfully.", "success");
+};
+
+export const attachDeleteListener = () => {
+  if (todoDeleteBtn) {
+    todoDeleteBtn.addEventListener("click", () => {
+      const idToDelete = todoDeleteBtn.dataset.deleteId;
+      const userConfirmed = confirm(
+        "Are you sure you want to delete this to-do list?"
+      );
+
+      if (userConfirmed && idToDelete) {
+        deleteTodoList(Number(idToDelete));
+        showSnackbar("Todo List has been deleted.", "delete");
+      } else if (userConfirmed === false) {
+        showSnackbar("Deletion cancelled.", "failure");
+      }
+    });
+  }
+};
+
+export const attachModifyListener = () => {
+  if (todoModifyBtn) {
+    todoModifyBtn.addEventListener("click", () => {
+      const idToModify = todoModifyBtn.dataset.modifyId;
+      if (idToModify) {
+        openModifyModal(Number(idToModify));
+      }
+    });
+  }
+};
+
+export const attachAddListener = () => {
+  if (addBtn) {
+    addBtn.addEventListener("click", (e) => {
+      e.preventDefault();
+      todoForm?.reset();
+      addModal?.showModal();
+    });
+  }
+};
+
+export const attachCancelListeners = () => {
+  closeModalBtn?.addEventListener("click", () => viewModalTyped?.close());
+  addlistCancleBtn?.addEventListener("click", () => addModal?.close());
+  modifyCancleBtn?.addEventListener("click", () => modifyModal?.close());
+};
+
+export const openViewModalById = (todoId: number) => {
+  const todoListData = todoContext.getTodos();
+  const todo = todoListData.find((t: any) => t.id === todoId);
+
+  if (!todo) return;
+
+  if (todoModifyBtn) {
+    todoModifyBtn.dataset.modifyId = String(todoId);
+  }
+  if (todoDeleteBtn) {
+    todoDeleteBtn.dataset.deleteId = String(todoId);
+  }
+
+  if (modalTitle) modalTitle.textContent = todo.title;
+  if (modalDesc) modalDesc.textContent = "Description: " + todo.description;
+
+  if (progressBadge) {
+    progressBadge.textContent = todo.progress;
+    progressBadge.className = "progress-badge";
+    if (todo.progress === "Todo") {
+      progressBadge.classList.add("todo");
+    } else if (todo.progress === "In Progress") {
+      progressBadge.classList.add("inprogress");
+    } else if (todo.progress === "Completed") {
+      progressBadge.classList.add("completed");
+    }
+  }
+
+  if (priorityBadge) {
+    priorityBadge.className = "priority-badge";
+    if (todo.priority === 1) {
+      priorityBadge.classList.add("high");
+      priorityBadge.textContent = "High";
+    } else if (todo.priority === 2) {
+      priorityBadge.classList.add("medium");
+      priorityBadge.textContent = "Medium";
+    } else if (todo.priority === 3) {
+      priorityBadge.classList.add("low");
+      priorityBadge.textContent = "Low";
+    }
+  }
+
+  if (modalRegiste) modalRegiste.textContent = "Registe: " + todo.date;
+  if (modalDeadline) modalDeadline.textContent = "Deadline: " + todo.deadline;
+
+  viewModalTyped?.showModal();
+};
+
+export const openAddModal = () => {
+  todoForm?.reset();
+  addModal?.showModal();
+};

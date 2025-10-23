@@ -1,25 +1,97 @@
 ---
 import Column from "./Column.astro";
-import { type Task } from "../classes/TaskList";
-import { taskList } from "../ts/cardScript";
+import { type Todo as Task } from "../ts/TodoContext"; 
+import { KanbanBoard, type ColumnType } from "../classes/kanboard";
 
-const tasks: Task[] = taskList.getAll();
+const kanbanBoard = new KanbanBoard();
 
-const todos: Task[] = tasks.filter((item) => item.progress === "todo");
-const inProgress: Task[] = tasks.filter(
-  (item) => item.progress === "in-progress"
-);
-const completed: Task[] = tasks.filter((item) => item.progress === "done");
+const todos: Task[] = []; 
+const inProgress: Task[] = []; 
+const completed: Task[] = []; 
 ---
 
 <div class="container">
   <div class="sub-container">
-    <!-- Column -->
+    
     <Column title={"To Do"} tasks={todos} id={"todo"} />
     <Column title={"In Progress"} tasks={inProgress} id={"in-progress"} />
     <Column title={"Completed"} tasks={completed} id={"done"} />
   </div>
 </div>
+
+<script>
+  import { todoContext, type Todo } from "../ts/TodoContext";
+  import { KanbanBoard } from "../classes/kanboard";
+  import { openViewModalById } from "../ts/ModalController"; 
+  
+  const kanbanBoard = new KanbanBoard();
+
+  const createCardElement = (task: Todo): HTMLDivElement => {
+      const priority = task.priority === 1 ? 'High' : task.priority === 2 ? 'Medium' : 'Low';
+      const bgColorClass = priority === 'High' ? "bg-high" : priority === 'Medium' ? "bg-mid" : "bg-low";
+      const deadlineStr = task.deadline;
+      const itemId = task.id.toString();
+      
+      const div = document.createElement('div');
+      div.classList.add('card');
+      div.draggable = true;
+      div.id = itemId;
+      
+      div.innerHTML = `
+          <div class="task-title">${task.title}</div>
+          <div class="priority-str ${bgColorClass}">${priority}</div>
+          ${task.deadline ? `<div class="duedate-text">Due: ${deadlineStr}</div>` : ''}
+      `;
+      return div;
+  };
+
+
+  const updateBoardDOM = () => {
+    todoContext.loadTodos(); 
+    kanbanBoard.initializeBoard(); 
+
+    const todos = kanbanBoard.getColumn("todo");
+    const inProgress = kanbanBoard.getColumn("in-progress");
+    const completed = kanbanBoard.getColumn("done");
+
+    const columns = [
+        { id: 'todo', tasks: todos },
+        { id: 'in-progress', tasks: inProgress },
+        { id: 'done', tasks: completed }
+    ];
+
+    columns.forEach(col => {
+        const container = document.querySelector(`#${col.id} .cards-container`) as HTMLDivElement;
+        if (container) {
+            container.innerHTML = ""; 
+            col.tasks.forEach(task => {
+                container.appendChild(createCardElement(task));
+            });
+        }
+    });
+  };
+
+  todoContext.subscribe(updateBoardDOM);
+  updateBoardDOM();
+
+  const boardContainer = document.querySelector(".container");
+
+  if (boardContainer) {
+      boardContainer.addEventListener('click', (event) => {
+          const targetCard = (event.target as HTMLElement).closest('.card');
+          
+          if (targetCard) {
+              const taskId = Number(targetCard.id);
+              
+              if (openViewModalById) {
+                  openViewModalById(taskId);
+              } else {
+                  (document.querySelector("#viewModal") as HTMLDialogElement)?.showModal();
+              }
+          }
+      });
+  }
+</script>
 
 <style>
   .container {

@@ -1,6 +1,12 @@
 ---
-import type { Task } from "../classes/TaskList";
-import TaskCard from "./TaskCard.astro";
+import type { ColumnType } from "../classes/kanboard"; 
+import type { Todo } from "../ts/TodoContext";
+
+interface Props {
+  title: string;
+  tasks: Todo[];
+  id: ColumnType;
+}
 
 const { title, tasks, id } = Astro.props;
 ---
@@ -12,32 +18,40 @@ const { title, tasks, id } = Astro.props;
       <img src="../../public/Plus.svg" alt="add icon" class="add-icon" />
     </div>
   </div>
-  <!-- Card -->
   <div class="cards-container">
-    {tasks.map((task: Task) => <TaskCard item={task} />)}
-  </div>
+    </div>
 </div>
 
 <script>
   import {
     dragoverHandler,
     dropHandler,
-    openEmptycard,
-  } from "../ts/cardScript";
+  } from "../ts/KanbanController";
+
+import { openAddModal } from "../ts/ModalController";
 
   const cols: NodeListOf<HTMLElement> = document.querySelectorAll(".col");
   cols.forEach((col) =>
-    col.addEventListener("drop", (event) => dropHandler(event))
+    col.addEventListener("drop", (event) => dropHandler(event as DragEvent))
   );
   cols.forEach((col) =>
-    col.addEventListener("dragover", (event) => dragoverHandler(event))
+    col.addEventListener("dragover", (event) => dragoverHandler(event as DragEvent))
   );
 
   const addIcons: NodeListOf<HTMLElement> =
     document.querySelectorAll(".add-icon");
   addIcons.forEach((icon) =>
-    icon.addEventListener("click", (event) => openEmptycard(event))
-  );
+    icon.addEventListener("click", (event) => {
+        event.preventDefault(); 
+        
+        if (openAddModal) {
+            openAddModal();
+        } else {
+            (document.querySelector("#addModal") as HTMLDialogElement)?.showModal();
+        }
+      }
+    
+  ));
 </script>
 
 <style>
@@ -55,5 +69,13 @@ const { title, tasks, id } = Astro.props;
   }
   .add-icon {
     cursor: pointer;
+  }
+
+  @media screen and (min-width: 768px) {
+    .sub-container {
+      flex-direction: row;
+      max-width: 1800px;
+      margin: 0 auto;
+    }
   }
 </style>
