@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Simple Todo App with Calendar</title>
+
+    <style>
+      /* Initial CSS Setup Start */
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          "Helvetica Neue", Arial, "Noto Sans KR", sans-serif;
+        line-height: 1.5;
+        padding: 20px;
+        display: flex; /* 레이아웃을 위해 Flexbox 사용 */
+        gap: 30px;
+      }
+
+      /* -------------------------------------- */
+      /* --- 1. Calendar Layout & Style --- */
+      /* -------------------------------------- */
+      aside {
+        flex-shrink: 0;
+      }
+
+      .calendar-grid {
+        width: 300px;
+        font-family: Arial, sans-serif;
+        padding: 10px;
+        border-radius: 8px;
+        background-color: #fff;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      }
+
+      .cal-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px 0;
+        margin-bottom: 10px;
+        border-bottom: 2px solid #f0f0f0;
+      }
+
+      .month-year {
+        font-size: 1.2rem;
+        font-weight: bold;
+        color: #333;
+      }
+
+      .cal-header button {
+        background: none;
+        border: none;
+        font-size: 1.5rem;
+        color: #007bff;
+        cursor: pointer;
+      }
+
+      .cal-days-header {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        text-align: center;
+        font-size: 0.8rem;
+        color: #888;
+        margin-bottom: 5px;
+      }
+      .cal-days-header span:first-child {
+        color: #dc3545;
+      }
+
+      .cal-dates {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        gap: 5px;
+        text-align: center;
+      }
+
+      .cal-dates span {
+        padding: 8px 0;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 0.95rem;
+        transition: background-color 0.2s;
+      }
+
+      .prev-month,
+      .next-month {
+        color: #ccc;
+        cursor: default;
+      }
+
+      .date.today {
+        background-color: #007bff;
+        color: white;
+        font-weight: bold;
+      }
+
+      .date.has-event {
+        position: relative;
+        border: 1px solid #ffc107;
+      }
+      .date.has-event::after {
+        content: "";
+        position: absolute;
+        bottom: 2px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 4px;
+        height: 4px;
+        background-color: #ffc107;
+        border-radius: 50%;
+      }
+
+      .cal-dates span:not(.prev-month, .next-month):hover {
+        background-color: #e9ecef;
+      }
+
+      /* -------------------------------------- */
+      /* --- 2. Main Content & Modals CSS --- */
+      /* -------------------------------------- */
+      main {
+        flex-grow: 1; /* 나머지 공간을 차지 */
+      }
+
+      .modal-btn {
+        width: auto;
+        height: auto;
+        border: 1px solid #ccc;
+        padding: 10px;
+        margin: 5px;
+        border-radius: 4px;
+        background-color: #f9f9f9;
+        transition: background-color 0.2s;
+      }
+
+      .modal-btn:hover {
+        background-color: #e0e0e0;
+      }
+
+      dialog {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        padding: 0;
+        border: none;
+        border-radius: 8px;
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+        max-width: 90vw;
+        width: 450px;
+      }
+
+      dialog::backdrop {
+        background-color: rgba(0, 0, 0, 0.5);
+      }
+
+      .modal-content,
+      .modal-write {
+        background: white;
+        padding: 25px;
+        border-radius: 8px;
+        position: relative;
+      }
+
+      .modal-content #modalTitle {
+        font-size: 28px;
+        margin-bottom: 5px;
+      }
+
+      .modal-content p {
+        margin: 8px 0;
+        font-size: 16px;
+      }
+
+      .modal-content .close-btn,
+      .modal-write .close-btn {
+        position: absolute;
+        top: 10px;
+        right: 15px;
+        font-size: 24px;
+        cursor: pointer;
+        color: #777;
+      }
+
+      .progress-btn {
+        display: inline-block;
+        padding: 4px 10px;
+        border-radius: 15px;
+        font-size: 14px;
+        font-weight: 600;
+        color: #fff;
+        text-align: center;
+        margin-left: 10px;
+        vertical-align: middle;
+      }
+
+      .todo {
+        background-color: #ff9800;
+      }
+      .inprogress {
+        background-color: #2196f3;
+      }
+      .completed {
+        background-color: #4caf50;
+      }
+
+      /* Form Styling (이전 답변과 동일) */
+      #todoForm p {
+        margin-bottom: 15px;
+      }
+      #todoForm label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: 600;
+        color: #333;
+      }
+
+      input[type="text"],
+      textarea,
+      input[type="date"] {
+        width: 100%;
+        padding: 10px 12px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        font-size: 16px;
+        transition: border-color 0.3s, box-shadow 0.3s;
+      }
+
+      input[type="text"]:focus,
+      textarea:focus,
+      input[type="date"]:focus {
+        border-color: #007bff;
+        box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+        outline: none;
+      }
+
+      textarea {
+        resize: vertical;
+        min-height: 80px;
+      }
+
+      #todoForm .radio-group label {
+        display: inline-flex;
+        align-items: center;
+        margin-right: 15px;
+        font-weight: normal;
+        cursor: pointer;
+      }
+
+      #todoForm .radio-group input[type="radio"] {
+        width: 16px;
+        height: 16px;
+        margin-right: 5px;
+        accent-color: #007bff;
+      }
+
+      #todoForm button[type="submit"] {
+        padding: 10px 15px;
+        background-color: #007bff;
+        color: white;
+        border-radius: 4px;
+        margin-right: 10px;
+      }
+
+      .addlist-cancle-btn {
+        padding: 10px 15px;
+        background-color: #f1f1f1;
+        color: #333;
+        border-radius: 4px;
+        border: 1px solid #ccc;
+      }
+    </style>
+  </head>
+  <body>
+    <aside>
+      <div class="calendar-grid">
+        <div class="cal-header">
+          <button>&lt;</button>
+          <span class="month-year">October 2025</span>
+          <button>&gt;</button>
+        </div>
+        <div class="cal-days-header">
+          <span>SUN</span><span>MON</span><span>TUE</span><span>WED</span
+          ><span>THU</span><span>FRI</span><span>SAT</span>
+        </div>
+        <div class="cal-dates">
+          <span class="prev-month">29</span>
+          <span class="prev-month">30</span>
+          <span class="prev-month">1</span>
+
+          <span class="date">1</span><span class="date">2</span
+          ><span class="date">3</span><span class="date">4</span>
+          <span class="date">5</span><span class="date">6</span
+          ><span class="date">7</span><span class="date">8</span>
+          <span class="date">9</span><span class="date">10</span
+          ><span class="date">11</span><span class="date">12</span>
+          <span class="date">13</span><span class="date">14</span
+          ><span class="date has-event">15</span><span class="date">16</span>
+          <span class="date">17</span><span class="date">18</span
+          ><span class="date today has-event">19</span
+          ><span class="date">20</span> <span class="date">21</span
+          ><span class="date">22</span><span class="date">23</span
+          ><span class="date">24</span> <span class="date">25</span
+          ><span class="date">26</span><span class="date">27</span
+          ><span class="date">28</span> <span class="date">29</span
+          ><span class="date">30</span><span class="date">31</span>
+        </div>
+      </div>
+    </aside>
+
+    <main>
+      <p>
+        <button class="modal-btn add-btn">+</button>
+      </p>
+
+      <div id="todoButtons"></div>
+
+      <dialog id="addModal">
+        <div class="modal-write">
+          <span class="close-btn add-close-btn">&times;</span>
+          <form id="todoForm">
+            <p class="form-group">
+              <label for="title">Title:</label
+              ><input
+                type="text"
+                id="title"
+                name="title"
+                placeholder="Enter task title"
+                required
+              />
+            </p>
+            <p class="form-group">
+              <label for="desc">Description:</label
+              ><textarea
+                id="desc"
+                name="desc"
+                placeholder="Enter task description"
+              ></textarea>
+            </p>
+            <div class="progress-group form-group">
+              <p>Progress:</p>
+              <div class="radio-group">
+                <label
+                  ><input
+                    type="radio"
+                    name="progress"
+                    value="Todo"
+                    checked
+                  />Todo</label
+                >
+                <label
+                  ><input type="radio" name="progress" value="In-Progress" />In
+                  Progress</label
+                >
+                <label
+                  ><input
+                    type="radio"
+                    name="progress"
+                    value="Completed"
+                  />Completed</label
+                >
+              </div>
+            </div>
+            <div class="priority-group form-group">
+              <p>Priority:</p>
+              <div class="radio-group">
+                <label
+                  ><input
+                    type="radio"
+                    name="priority"
+                    value="1"
+                    checked
+                  />High</label
+                >
+                <label
+                  ><input type="radio" name="priority" value="2" />Medium</label
+                >
+                <label
+                  ><input type="radio" name="priority" value="3" />Low</label
+                >
+              </div>
+            </div>
+            <p class="form-group">
+              <label for="dueDate">Deadline Setting:</label
+              ><input type="date" id="dueDate" name="dueDate" />
+            </p>
+            <button type="submit">Add Task</button>
+            <button type="button" class="addlist-cancle-btn">Cancel</button>
+          </form>
+        </div>
+      </dialog>
+
+      <dialog id="viewModal">
+        <div class="modal-content">
+          <span class="close-btn view-close-btn">&times;</span>
+          <h1 id="modalTitle">Hello! 👋</h1>
+          <p id="modalDesc">This is the content of the modal dialog.</p>
+          <p id="progressWrapper">
+            Progress:
+            <span id="progressBadge" class="progress-btn"></span>
+          </p>
+          <p id="priority">Priority:</p>
+          <p id="registe">Registe:</p>
+          <p id="deadline">Deadline:</p>
+          <p class="btn-wrapper">
+            <button class="todo-modify-btn">Modify</button>
+            <button class="todo-delete-btn">Delete</button>
+          </p>
+        </div>
+      </dialog>
+    </main>
+
+    <script>
+      // --- 1. JSON Data ---
+      const todoListData = [
+        {
+          id: 1,
+          title: "Clean the kitchen",
+          description:
+            "Wipe the counters, wash dishes, and organize the pantry.",
+          priority: 1,
+          date: "2025-10-21",
+          deadline: "2025-10-23",
+          progress: "Todo",
+        },
+        {
+          id: 2,
+          title: "Finish English essay",
+          description:
+            "Write the conclusion and proofread the entire essay before submission.",
+          priority: 2,
+          date: "2025-10-22",
+          deadline: "2025-10-25",
+          progress: "In-Progress",
+        },
+        {
+          id: 3,
+          title: "Team meeting",
+          description:
+            "Discuss project milestones and assign tasks for the next sprint.",
+          priority: 1,
+          date: "2025-10-23",
+          deadline: "2025-10-23",
+          progress: "Todo",
+        },
+        {
+          id: 4,
+          title: "Grocery shopping",
+          description: "Buy milk, bread, eggs, and fruits for the week.",
+          priority: 3,
+          date: "2025-10-20",
+          deadline: "2025-10-21",
+          progress: "Completed",
+        },
+        {
+          id: 5,
+          title: "Workout session",
+          description: "45-minute cardio followed by strength training.",
+          priority: 2,
+          date: "2025-10-24",
+          deadline: "2025-10-26",
+          progress: "In Progress",
+        },
+        {
+          id: 6,
+          title: "Call mom",
+          description:
+            "Catch up with mom and ask about the family gathering plans.",
+          priority: 3,
+          date: "2025-10-19",
+          deadline: "2025-10-20",
+          progress: "Todo",
+        },
+        {
+          id: 7,
+          title: "Study JavaScript",
+          description:
+            "Review promises, async/await, and practice with coding exercises.",
+          priority: 1,
+          date: "2025-10-25",
+          deadline: "2025-10-30",
+          progress: "Todo",
+        },
+        {
+          id: 8,
+          title: "Doctor appointment",
+          description: "Regular health checkup at 10:00 AM.",
+          priority: 1,
+          date: "2025-10-18",
+          deadline: "2025-10-18",
+          progress: "Completed",
+        },
+        {
+          id: 9,
+          title: "Laundry day",
+          description:
+            "Wash white clothes separately and dry everything before evening.",
+          priority: 2,
+          date: "2025-10-21",
+          deadline: "2025-10-22",
+          progress: "In Progress",
+        },
+        {
+          id: 10,
+          title: "Plan weekend trip",
+          description: "Decide destination, book tickets, and pack essentials.",
+          priority: 3,
+          date: "2025-10-26",
+          deadline: "2025-10-29",
+          progress: "Todo",
+        },
+      ];
+
+      // --- 2. Button Rendering ---
+      const todoButtonsContainer = document.getElementById("todoButtons");
+      if (todoButtonsContainer) {
+        todoButtonsContainer.innerHTML = todoListData
+          .map(
+            (todo) => `
+                <button data-id="${todo.id}" class="modal-btn todo-item-btn">
+                    ${todo.title}
+                </button>
+            `
+          )
+          .join("");
+      }
+
+      // --- 3. Modal Logic ---
+      window.addEventListener("DOMContentLoaded", () => {
+        // View Modal Elements
+        const viewModal = document.getElementById("viewModal");
+        const viewModalTyped = viewModal;
+        const viewCloseBtn = viewModal?.querySelector(".view-close-btn");
+        const modalTitle = document.getElementById("modalTitle");
+        const modalDesc = document.getElementById("modalDesc");
+        const progressBadge = document.getElementById("progressBadge");
+        const modalPriority = document.getElementById("priority");
+        const modalRegiste = document.getElementById("registe");
+        const modalDeadline = document.getElementById("deadline");
+
+        // Add Modal Elements
+        const addModal = document.getElementById("addModal");
+        const addBtn = document.querySelector(".add-btn");
+        const addCancelBtn = addModal?.querySelector(".addlist-cancle-btn");
+        const addCloseBtn = addModal?.querySelector(".add-close-btn");
+
+        // 1. Add Modal Open/Close Logic
+        addBtn?.addEventListener("click", (e) => {
+          e.preventDefault();
+          addModal?.showModal();
+        });
+
+        addCancelBtn?.addEventListener("click", (e) => {
+          e.preventDefault();
+          addModal?.close();
+        });
+
+        addCloseBtn?.addEventListener("click", () => addModal?.close());
+
+        // 2. View Modal Open Logic (Todo Item Buttons)
+        document.querySelectorAll(".todo-item-btn").forEach((btn) => {
+          btn.addEventListener("click", () => {
+            const todoId = btn.dataset.id;
+            const todo = todoListData.find((t) => String(t.id) === todoId);
+
+            if (!todo) return;
+
+            if (modalTitle) modalTitle.textContent = todo.title;
+            if (modalDesc)
+              modalDesc.textContent = "Description: " + todo.description;
+
+            if (progressBadge) {
+              progressBadge.textContent = todo.progress;
+
+              // 클래스를 기본값으로 초기화
+              progressBadge.className = "progress-btn";
+
+              // Progress 값을 CSS 클래스에 맞게 정규화
+              const progressClass = String(todo.progress)
+                .toLowerCase()
+                .replace(/[-\s]/g, "");
+
+              // 클래스 추가
+              progressBadge.classList.add(progressClass);
+            }
+
+            if (modalPriority)
+              modalPriority.textContent = "Priority: " + todo.priority;
+            if (modalRegiste)
+              modalRegiste.textContent = "Registe: " + todo.date;
+            if (modalDeadline)
+              modalDeadline.textContent = "Deadline: " + todo.deadline;
+
+            viewModalTyped?.showModal();
+          });
+        });
+
+        // 3. View Modal Close Logic
+        viewCloseBtn?.addEventListener("click", () => viewModalTyped?.close());
+      });
+    </script>
+  </body>
+</html>

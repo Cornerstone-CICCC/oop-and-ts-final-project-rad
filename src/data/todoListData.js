@@ -1,4 +1,4 @@
-[
+const todoListData = [
   {
     id: 1,
     title: "Clean the kitchen",
@@ -16,7 +16,7 @@
     periority: 2,
     date: "2025-10-22",
     deadline: "2025-10-25",
-    progress: "In Progress",
+    progress: "In-Progress",
   },
   {
     id: 3,
@@ -94,3 +94,5 @@
     progress: "Todo",
   },
 ];
+
+export default todoListData;
