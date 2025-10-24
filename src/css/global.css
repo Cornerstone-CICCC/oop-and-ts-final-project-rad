@@ -177,6 +177,7 @@ dialog::backdrop {
   flex-direction: column;
   align-items: flex-start;
   gap: 20px;
+  min-width: 400px;
 }
 
 #todoForm .btn-wrapper {
@@ -736,6 +737,7 @@ dialog::backdrop {
   font-size: 14px;
   border: 1px solid #ccc;
   border-radius: 6px;
+  width: 260px;
 }
 
 .kanban-nav ul {
@@ -752,6 +754,23 @@ dialog::backdrop {
   font-size: 14px;
   cursor: pointer;
   color: #333;
+}
+
+#list-icon:hover{
+  color: #4f46e5;
+}
+#board-icon:hover{
+  color: #4f46e5;
+}
+
+#timeline-icon:hover{
+  color: #4f46e5;
+}
+#calendar-icon:hover{
+  color: #4f46e5;
+}
+#progress-icon:hover{
+  color: #4f46e5;
 }
 
 .kanban-nav li img {
