@@ -700,8 +700,8 @@ dialog::backdrop {
   height: auto;
 }
 
-.header-top-left h1 {
-  font-size: 24px;
+.title-header {
+  font-size: 32px;
   font-weight: bold;
   margin: 0;
 }
@@ -824,8 +824,8 @@ dialog::backdrop {
     width: 32px;
   }
 
-  .header-top-left h1{
-    font-size: 20px;
+  .title-header{
+    font-size: 28px;
   }
 
   .search-container {
@@ -833,7 +833,6 @@ dialog::backdrop {
     flex-direction: column;
     gap: 10px;
     width: 100%;
-    max-width: 520px;
   }
 
   .search-content {
