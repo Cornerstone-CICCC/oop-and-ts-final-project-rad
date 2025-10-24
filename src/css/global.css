@@ -636,6 +636,34 @@ dialog::backdrop {
   background-color: #ff9800;
 }
 
+#modifyModal .modal-modify {
+  flex-direction: column;
+  gap: 20px;
+  position: relative;
+}
+
+#snackbar-inside-modal {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #ff9800;
+  color: white;
+  padding: 12px 20px;
+  border-radius: 8px;
+  z-index: 10000;
+  visibility: hidden;
+  opacity: 0;
+  transition: opacity 0.4s ease, bottom 0.4s ease;
+}
+
+#snackbar-inside-modal.show {
+  opacity: 1;
+  visibility: visible;
+  -webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
+  animation: fadein 0.5s, fadeout 0.5s 2.5s;
+}
+
 @-webkit-keyframes fadein {
   from {
     bottom: 0;
@@ -686,7 +714,18 @@ dialog::backdrop {
   dialog {
     min-width: 200px;
     width: 400px;
-    height: auto;
+    height: 70%;
+    max-height: 90vh;
+  }
+
+  #modifyModal .modal-modify {
+    flex-direction: column;
+    gap: 20px;
+    position: relative;
+
+    height: 100%;
+    max-height: calc(90vh - 40px);
+    overflow-y: auto;
   }
 
   #modifyForm .radio-group {
@@ -756,20 +795,20 @@ dialog::backdrop {
   color: #333;
 }
 
-#list-icon:hover{
+#list-icon:hover {
   color: #4f46e5;
 }
-#board-icon:hover{
+#board-icon:hover {
   color: #4f46e5;
 }
 
-#timeline-icon:hover{
+#timeline-icon:hover {
   color: #4f46e5;
 }
-#calendar-icon:hover{
+#calendar-icon:hover {
   color: #4f46e5;
 }
-#progress-icon:hover{
+#progress-icon:hover {
   color: #4f46e5;
 }
 
@@ -779,7 +818,7 @@ dialog::backdrop {
   transition: filter 0.3s ease;
 }
 
-.search-container{
+.search-container {
   position: relative;
   display: inline-block;
 }
@@ -791,9 +830,9 @@ dialog::backdrop {
   transform: translateY(4px);
   width: 100%;
   background: #fff;
-  border: 1px solid rgba(0,0,0,0.12);
-  box-shadow: 0 6px 18px rgba(0,0,0,0.08);
-  width: 260px; 
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+  width: 260px;
   max-height: 280px;
   overflow: auto;
   z-index: 50;
@@ -816,7 +855,7 @@ dialog::backdrop {
 
 .search-suggestions .suggestion-item:hover,
 .search-suggestions .suggestion-item.focused {
-  background: rgba(0,0,0,0.06);
+  background: rgba(0, 0, 0, 0.06);
 }
 
 .search-suggestions .suggestion-meta {
@@ -826,31 +865,31 @@ dialog::backdrop {
 }
 
 .add-task-btn,
-.search-icon{
+.search-icon {
   display: none;
 }
 
 /*Responsive Header*/
 @media (max-width: 768px) {
   .kanban-header,
-  .header-top{
+  .header-top {
     padding: 12px;
     flex-direction: column;
     align-items: flex-start;
   }
 
-  .header-left{
+  .header-left {
     flex-direction: row;
     justify-content: space-between;
     width: 100%;
     gap: 8px;
   }
 
-  .header-left img{
+  .header-left img {
     width: 32px;
   }
 
-  .title-header{
+  .title-header {
     font-size: 28px;
   }
 
@@ -866,49 +905,49 @@ dialog::backdrop {
     width: 100%;
   }
 
-  .search-bar{
+  .search-bar {
     width: 100%;
     padding: 12px 44px 12px 16px; /* espacio a la derecha para el icono */
     border-radius: 28px;
     border: 1px solid #e6e9ef;
     background: #fff;
-    box-shadow: 0 1px 0 rgba(0,0,0,0.02) inset;
+    box-shadow: 0 1px 0 rgba(0, 0, 0, 0.02) inset;
     font-size: 15px;
   }
 
   .search-icon {
     display: inline-flex;
-      position: absolute;
-      right: 8px;
-      top: 50%;
-      transform: translateY(-50%);
-      width: 36px;
-      height: 36px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      border-radius: 50%;
-      background: transparent;
-      border: none;
-      padding: 0;
-      cursor: pointer;
+    position: absolute;
+    right: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 36px;
+    height: 36px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: transparent;
+    border: none;
+    padding: 0;
+    cursor: pointer;
   }
 
-.search-suggestions {
+  .search-suggestions {
     position: absolute;
     left: 0;
     top: 100%;
     transform: translateY(0);
     width: 100%;
     background: #fff;
-    border: 1px solid rgba(0,0,0,0.08);
-    box-shadow: 0 10px 30px rgba(2,6,23,0.08);
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    box-shadow: 0 10px 30px rgba(2, 6, 23, 0.08);
     max-height: 260px;
     overflow: auto;
     z-index: 50;
     display: none;
     margin-top: 0;
-    border-radius: 0 0 12px 12px; 
+    border-radius: 0 0 12px 12px;
     padding: 6px 0;
     box-sizing: border-box;
   }
@@ -922,7 +961,7 @@ dialog::backdrop {
     border-radius: 28px;
     font-weight: 700;
     border: none;
-    box-shadow: 0 6px 18px rgba(79,70,229,0.18);
+    box-shadow: 0 6px 18px rgba(79, 70, 229, 0.18);
   }
 
   .kanban-nav ul {
@@ -940,9 +979,15 @@ dialog::backdrop {
     gap: 6px;
     padding: 6px;
   }
-  .kanban-nav li img { width: 20px; height: 20px; margin: 0; }
+  .kanban-nav li img {
+    width: 20px;
+    height: 20px;
+    margin: 0;
+  }
 
-  .search-suggestions.visible { display: block; }
+  .search-suggestions.visible {
+    display: block;
+  }
 }
 
 /* section-3 CSS end */
