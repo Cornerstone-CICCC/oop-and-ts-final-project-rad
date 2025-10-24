@@ -161,63 +161,41 @@ dialog::backdrop {
   z-index: 999998;
 }
 
-#addModal .modal-write {
+#addModal {
+  position: fixed;
+  z-index: 999999;
   background: white;
   padding: 20px;
   border-radius: 10px;
-  width: 100%;
+  min-width: 400px;
+  width: 450px;
   text-align: left;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border: 1px solid #ccc;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+#addModal::backdrop {
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+#addModal .modal-write {
+  flex-direction: column;
+  gap: 20px;
   position: relative;
 }
 
 #todoForm {
   width: 100%;
-  height: auto;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 20px;
-  min-width: 400px;
-}
-
-#todoForm .btn-wrapper {
-  display: flex;
-  gap: 10px;
-  justify-content: flex-end;
+  gap: 18px;
   margin-top: 20px;
 }
 
-.btn-wrapper .addlist-add-btn {
-  width: auto;
-  height: auto;
-  background-color: #4f46e5;
-  padding: 10px;
-  color: white;
-  cursor: pointer;
-  border-radius: 20px;
-}
-
-.btn-wrapper .addlist-cancle-btn {
-  width: auto;
-  height: auto;
-  background-color: #ccc;
-  padding: 10px;
-  color: white;
-  cursor: pointer;
-  border-radius: 20px;
-}
-
-.modal-write h2 {
-  font-size: 36px;
-  text-wrap: nowrap;
-  margin-bottom: 15px;
-}
-
-#todoForm {
-  display: flex;
-  flex-direction: column;
-  gap: 18px;
-}
 #todoForm p {
   width: 100%;
   height: auto;
@@ -252,6 +230,64 @@ dialog::backdrop {
 #todoForm textarea {
   resize: vertical;
   min-height: 70px;
+}
+
+#todoForm .radio-group {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 15px;
+  flex-wrap: nowrap;
+}
+
+#todoForm .radio-group label {
+  display: flex;
+  gap: 6px;
+  background: #f8f9fa;
+  padding: 6px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: all 0.2s;
+  font-size: 14px;
+}
+
+#todoForm .btn-wrapper {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+  margin-top: 20px;
+}
+
+#todoForm .addlist-add-btn {
+  width: auto;
+  height: auto;
+  background-color: #4f46e5;
+  padding: 10px;
+  color: white;
+  cursor: pointer;
+  border-radius: 20px;
+  font-weight: 600;
+}
+
+#todoForm .addlist-cancle-btn {
+  width: auto;
+  height: auto;
+  background-color: #ccc;
+  padding: 10px;
+  color: white;
+  cursor: pointer;
+  border-radius: 20px;
+  font-weight: 600;
+}
+
+#addModal .close-btn {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  font-size: 22px;
+  cursor: pointer;
 }
 
 /* --- Radio Group --- */
@@ -473,6 +509,26 @@ dialog::backdrop {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   min-width: 400px;
   width: 450px;
+}
+
+#addModal {
+  position: fixed;
+  z-index: 999999;
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  min-width: 400px;
+  width: 450px;
+  text-align: left;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border: 1px solid #ccc;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+#addModal::backdrop {
+  background-color: rgba(0, 0, 0, 0.5);
 }
 
 #modifyModal {
@@ -709,6 +765,7 @@ dialog::backdrop {
 }
 
 @media screen and (max-width: 768px) {
+  #addModal,
   #viewModal,
   #modifyModal,
   dialog {
@@ -717,7 +774,7 @@ dialog::backdrop {
     height: 70%;
     max-height: 90vh;
   }
-
+  #addModal .modal-write,
   #modifyModal .modal-modify {
     flex-direction: column;
     gap: 20px;
@@ -728,6 +785,7 @@ dialog::backdrop {
     overflow-y: auto;
   }
 
+  #todoForm .radio-group,
   #modifyForm .radio-group {
     flex-direction: column;
     align-items: flex-start;
