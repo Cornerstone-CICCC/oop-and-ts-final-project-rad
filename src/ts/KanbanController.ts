@@ -1,6 +1,8 @@
 import { todoContext, type Todo, type Progress } from "./TodoContext";
 import { KanbanBoard } from "../classes/kanboard";
 
+import { showSnackbar } from "../ts/ModalController";
+
 export type ColumnType = "todo" | "in-progress" | "done";
 
 export const kanbanBoard = new KanbanBoard();
@@ -98,4 +100,5 @@ export function addInputToTask(event: FocusEvent | KeyboardEvent): void {
 
   const parentCard = target.parentElement?.parentElement;
   parentCard?.remove();
+  showSnackbar("Click the task to modify it.", "success");
 }
