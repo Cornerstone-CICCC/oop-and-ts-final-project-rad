@@ -264,6 +264,28 @@ export const handleTodoSubmit = (e: Event) => {
   showSnackbar("Todo List has been added successfully.", "success");
 };
 
+function showInternalSnackbar(message: string, type: string = "failure") {
+  const internalSnackbar = document.getElementById("snackbar-inside-modal");
+
+  if (internalSnackbar) {
+    internalSnackbar.textContent = message;
+    internalSnackbar.className = "show " + type;
+
+    setTimeout(() => {
+      if (internalSnackbar) {
+        internalSnackbar.className = internalSnackbar.className.replace(
+          "show",
+          ""
+        );
+      }
+    }, 3000);
+  } else {
+    console.error(
+      "Error: Snackbar element with ID 'snackbar-inside-modal' not found."
+    );
+  }
+}
+
 export const handleModifySubmit = (e: Event) => {
   e.preventDefault();
 
@@ -286,22 +308,22 @@ export const handleModifySubmit = (e: Event) => {
   const deadlineValue = deadlineInput?.value || "";
 
   if (!title.trim()) {
-    showSnackbar("Title is required.", "failure");
+    showInternalSnackbar("Title is required.", "failure");
     return;
   }
 
   if (!description.trim()) {
-    showSnackbar("Description is required.", "failure");
+    showInternalSnackbar("Description is required.", "failure");
     return;
   }
 
   if (!progressValue) {
-    showSnackbar("Progress must be selected.", "failure");
+    showInternalSnackbar("Progress must be selected.", "failure");
     return;
   }
 
   if (!priorityValue) {
-    showSnackbar("Priority must be selected.", "failure");
+    showInternalSnackbar("Priority must be selected.", "failure");
     return;
   }
 
@@ -312,7 +334,10 @@ export const handleModifySubmit = (e: Event) => {
     const selectedDate = new Date(deadlineValue);
 
     if (selectedDate < today) {
-      showSnackbar("The deadline must be set to today or later.", "failure");
+      showInternalSnackbar(
+        "The deadline must be set to today or later.",
+        "failure"
+      );
       return;
     }
   }
