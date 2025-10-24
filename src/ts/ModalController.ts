@@ -31,6 +31,9 @@ export const addModal = document.getElementById(
 export const addBtn = document.querySelector(
   ".add-btn"
 ) as HTMLButtonElement | null;
+export const addTaskBtn = document.querySelector(
+  ".add-task-btn"
+) as HTMLButtonElement | null;
 export const todoForm = document.getElementById(
   "todoForm"
 ) as HTMLFormElement | null;
@@ -218,28 +221,31 @@ export const handleTodoSubmit = (e: Event) => {
     const selectedDate = new Date(deadlineValue);
 
     if (selectedDate < today) {
-      showSnackbar("The deadline must be set to today or later.", "failure");
+      showInternalSnackbar(
+        "The deadline must be set to today or later.",
+        "failure"
+      );
       return;
     }
   }
 
   if (!title.trim()) {
-    showSnackbar("Title is required.", "failure");
+    showInternalSnackbar("Title is required.", "failure");
     return;
   }
 
   if (!description.trim()) {
-    showSnackbar("description is required.", "failure");
+    showInternalSnackbar("description is required.", "failure");
     return;
   }
 
   if (!checkedProgressInput) {
-    showSnackbar("Progress must be selected.", "failure");
+    showInternalSnackbar("Progress must be selected.", "failure");
     return;
   }
 
   if (!checkedPriorityInput) {
-    showSnackbar("Priority must be selected.", "failure");
+    showInternalSnackbar("Priority must be selected.", "failure");
     return;
   }
 
@@ -261,7 +267,7 @@ export const handleTodoSubmit = (e: Event) => {
   addModal?.close();
   todoForm.reset();
 
-  showSnackbar("Todo List has been added successfully.", "success");
+  showInternalSnackbar("Todo List has been added successfully.", "success");
 };
 
 function showInternalSnackbar(message: string, type: string = "failure") {
@@ -354,7 +360,9 @@ export const handleModifySubmit = (e: Event) => {
   modifyModal?.close();
   modifyForm.reset();
 
-  showSnackbar("Todo List has been modified successfully.", "success");
+  openViewModalById(modifyId);
+
+  showInternalSnackbar("Todo List has been modified successfully.", "success");
 };
 
 export const attachDeleteListener = () => {
@@ -387,8 +395,8 @@ export const attachModifyListener = () => {
 };
 
 export const attachAddListener = () => {
-  if (addBtn) {
-    addBtn.addEventListener("click", (e) => {
+  if (addTaskBtn) {
+    addTaskBtn.addEventListener("click", (e) => {
       e.preventDefault();
       todoForm?.reset();
       addModal?.showModal();
