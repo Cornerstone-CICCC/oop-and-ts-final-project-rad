@@ -1,0 +1,198 @@
+---
+import todoListData from "../data/todoListData.js"
+const todosJSON = JSON.stringify(todoListData);
+
+import { todoContext, Priority, type Progress } from "../ts/TodoContext";
+---
+<!--
+<p>
+    <button class="modal-btn add-btn">+</button>
+</p>
+-->
+
+<div id="todo-list-container">
+</div>
+
+
+<dialog id="addModal" >
+  <div class="modal-write">
+    <h2>Created On</h2>
+    <form id="todoForm">
+        <p>
+        <label for="title">Title </label>
+        <input type="text" id="title" name="title" placeholder="Enter task title" required />
+        </p>
+
+        <p>
+        <label for="description">Description </label>
+        <textarea id="description" name="description" placeholder="Enter task description"></textarea>
+        </p>
+
+        <p>Progress</p>
+        <div class="radio-group">
+            <label>
+            <input type="radio" name="progress" value="Todo" checked>
+            Todo
+            </label>
+
+            <label>
+            <input type="radio" name="progress" value="In Progress">
+            In Progress
+            </label>
+
+            <label>
+            <input type="radio" name="progress" value="Completed">
+            Completed
+            </label>
+        </div>
+        <p>Priority</p>
+        <div class="radio-group">
+        <label class="priority-high">
+            <input type="radio"  name="priority" value="1" checked>
+            High
+        </label>
+
+        <label class="priority-mid">
+            <input type="radio"  name="priority" value="2">
+            Medium
+        </label>
+
+        <label class="priority-low">
+            <input type="radio"  name="priority" value="3">
+            Low
+        </label>
+        </div>
+        
+        <p>
+        <label for="deadline">Deadline Setting</label>
+        <input type="date" class="c" name="deadline" />
+        </p>
+        <div class="btn-wrapper">
+            <button type="submit" class="addlist-add-btn">Add Task</button>
+            <button class="addlist-cancle-btn">Cancle</button>
+        </div>
+    </form>
+  </div>
+</dialog>
+ 
+
+<dialog id="viewModal" data-todos={todosJSON}>
+  <div class="modal-content">
+    <span class="close-btn">&times;</span>
+    <h1 id="modalTitle">Hello! 👋</h1>
+    <p id="modalDesc">This is the content of the modal dialog.</p>
+    
+    <p id="progressWrapper"> 
+        Progress:
+        <span id="progressBadge" class="progress-btn"></span>
+    </p>
+
+    <p id="periorityWrapper">
+        Priority:
+        <span id="periorityBadge" class="periority-btn"></span>
+    </p>
+    
+    <p id="registe"> Registe</p>
+    <p id="deadline">Deadline</p>
+    <p class="btn-wrapper">
+        <button class="todo-modify-btn">Modify</button>
+        <button class="todo-delete-btn">Delete</button>
+    </p>
+  </div>
+</dialog>
+
+
+<dialog id="modifyModal" >
+  <div class="modal-modify">
+    <h2>Created On</h2>
+    <form id="modifyForm">
+        <p>
+        <label for="title">Title </label>
+        <input type="text" id="title" name="title" placeholder="Enter task title" required />
+        </p>
+
+        <p>
+        <label for="description">Description </label>
+        <textarea id="description" name="description" placeholder="Enter task description"></textarea>
+        </p>
+
+        <p>Progress</p>
+        <div class="radio-group">
+            <label>
+            <input type="radio" name="progress" value="Todo" checked>
+            Todo
+            </label>
+
+            <label>
+            <input type="radio" name="progress" value="In Progress">
+            In Progress
+            </label>
+
+            <label>
+            <input type="radio" name="progress" value="Completed">
+            Completed
+            </label>
+        </div>
+        <p>Priority</p>
+        <div class="radio-group">
+        <label class="priority-high">
+            <input type="radio"  name="priority" value="1" checked>
+            High
+        </label>
+
+        <label class="priority-mid">
+            <input type="radio"  name="priority" value="2">
+            Medium
+        </label>
+
+        <label class="priority-low">
+            <input type="radio"  name="priority" value="3">
+            Low
+        </label>
+        </div>
+        
+        <p>
+        <label for="deadline">Deadline Setting</label>
+        <input type="date" class="deadline" name="deadline" />
+        </p>
+        <div class="btn-wrapper">
+            <button type="submit" class="addlist-modify-btn">Modify Task</button>
+            <button class="addlist-cancle-btn">Cancle</button>
+        </div>
+    </form>
+    <div id="snackbar-inside-modal"></div>
+  </div>
+</dialog>
+
+<div id="snackbar">Todo List has been added to your list</div>
+
+<script>    
+    import { todoContext } from "../ts/TodoContext";
+    
+    import { 
+        addModal, todoForm, modifyForm, addBtn, 
+        todoDeleteBtn, todoModifyBtn, closeModalBtn,
+        viewModalTyped, modifyModal 
+    } from "../ts/ModalController"; 
+
+    import { 
+        handleTodoSubmit, 
+        handleModifySubmit,
+        attachDeleteListener, 
+        attachModifyListener, 
+        attachAddListener,    
+        attachCancelListeners ,
+        attachViewModalCloseListener
+    } from "../ts/ModalController";
+
+    attachDeleteListener();
+    attachModifyListener();
+    attachAddListener();
+    
+    todoForm?.addEventListener("submit", handleTodoSubmit);
+    modifyForm?.addEventListener("submit", handleModifySubmit);
+
+    attachCancelListeners();
+    attachViewModalCloseListener();
+
+</script>

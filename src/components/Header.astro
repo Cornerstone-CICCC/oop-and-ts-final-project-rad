@@ -1,1 +1,32 @@
-<header></header>
+<header class="kanban-header">
+    <div class="header-top">
+        <div class="header-left">
+            <img src="/src/assets/logo.png" alt="">
+            <h1 class="title-header">Todo Kanban Board</h1>
+        </div>
+        <div class="search-container">
+            <div class="search-content">
+                <input id="search-input" type="text" placeholder="Search tasks..." class="search-bar" />
+                <button type="button" class="search-icon" aria-hidden="true">
+                    <img src="/src/assets/search.svg" alt="" />
+                </button>
+                <div id="search-suggestions" class="search-suggestions"></div>
+            </div>
+            <button id="add-task-btn" class="add-task-btn">Add Task</button>
+        </div>
+        
+  </div>
+    <nav class="kanban-nav">
+        <ul>
+            <li id="list-icon" data-name="list"><img src="/src/assets/list.svg" alt="List icon" />List</li>
+            <li id="board-icon" data-name="board"><img src="/src/assets/board.svg" alt="Board icon" />Board</li>
+            <li id="timeline-icon" data-name="timeline"><img src="/src/assets/timeline.svg" alt="Timeline icon" />Timeline</li>
+            <li id="calendar-icon" data-name="calendar"><img src="/src/assets/calendar.svg" alt="Calendar icon" />Calendar</li>
+            <li id="progress-icon"data-name="progress"><img src="/src/assets/progress.svg" alt="Progress icon" />Progress</li>
+        </ul>
+    </nav>
+    <script type="module">
+      import '/src/classes/header.ts';
+      import '/src/ts/headerSearch.ts'
+    </script>
+</header>

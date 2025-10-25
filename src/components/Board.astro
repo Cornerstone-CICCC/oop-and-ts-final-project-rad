@@ -1,0 +1,129 @@
+---
+import Column from "./Column.astro";
+import { type Todo as Task } from "../ts/TodoContext";
+
+const todos: Task[] = [];
+const inProgress: Task[] = [];
+const completed: Task[] = [];
+---
+
+<div class="container">
+  <div class="sub-container">
+    <Column title={"To Do"} tasks={todos} id={"todo"} />
+    <Column title={"In Progress"} tasks={inProgress} id={"in-progress"} />
+    <Column title={"Completed"} tasks={completed} id={"done"} />
+  </div>
+</div>
+
+<script>
+  import { todoContext, type Todo } from "../ts/TodoContext";
+
+  import { openViewModalById } from "../ts/ModalController";
+  import {
+    dragoverHandler,
+    dragstartHandler,
+    kanbanBoard,
+  } from "../ts/KanbanController";
+
+  const createCardElement = (task: Todo): HTMLDivElement => {
+    const priority =
+      task.priority === 1 ? "High" : task.priority === 2 ? "Medium" : "Low";
+    const bgColorClass =
+      priority === "High"
+        ? "bg-high"
+        : priority === "Medium"
+          ? "bg-mid"
+          : "bg-low";
+    const deadlineStr = task.deadline;
+    const itemId = task.id.toString();
+
+    const div = document.createElement("div");
+    div.classList.add("card");
+    div.draggable = true;
+    div.id = itemId;
+
+    div.innerHTML = `
+          <div class="task-title">${task.title}</div>
+          <div class="priority-str ${bgColorClass}">${priority}</div>
+          ${task.deadline ? `<div class="duedate-text">Due: ${deadlineStr}</div>` : ""}
+      `;
+
+    div.addEventListener("dragstart", (event) => {
+      dragstartHandler(event);
+      console.log("drag start");
+    });
+    return div;
+  };
+
+  const updateBoardDOM = () => {
+    todoContext.loadTodos();
+    kanbanBoard.initializeBoard();
+
+    const todos = kanbanBoard.getColumn("todo");
+    const inProgress = kanbanBoard.getColumn("in-progress");
+    const completed = kanbanBoard.getColumn("done");
+
+    const columns = [
+      { id: "todo", tasks: todos },
+      { id: "in-progress", tasks: inProgress },
+      { id: "done", tasks: completed },
+    ];
+
+    columns.forEach((col) => {
+      const container = document.querySelector(
+        `#${col.id} .cards-container`
+      ) as HTMLDivElement;
+      if (container) {
+        container.innerHTML = "";
+        col.tasks.forEach((task) => {
+          container.appendChild(createCardElement(task));
+        });
+      }
+    });
+  };
+
+  todoContext.subscribe(updateBoardDOM);
+  updateBoardDOM();
+
+  const boardContainer = document.querySelector(".container");
+
+  if (boardContainer) {
+    boardContainer.addEventListener("click", (event) => {
+      const targetCard = (event.target as HTMLElement).closest(".card");
+
+      if (targetCard) {
+        const taskId = Number(targetCard.id);
+
+        if (openViewModalById) {
+          openViewModalById(taskId);
+        } else {
+          (
+            document.querySelector("#viewModal") as HTMLDialogElement
+          )?.showModal();
+        }
+      }
+    });
+  }
+</script>
+
+<style>
+  .container {
+    background-color: #f5f7fa;
+    padding-bottom: 5rem;
+  }
+
+  .sub-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 1rem;
+  }
+
+  @media screen and (min-width: 768px) {
+    .sub-container {
+      flex-direction: row;
+      max-width: 1800px;
+      margin: 0 auto;
+    }
+  }
+</style>

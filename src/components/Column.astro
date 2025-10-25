@@ -1,0 +1,84 @@
+---
+import type { ColumnType } from "../classes/kanboard";
+import type { Todo } from "../ts/TodoContext";
+import TaskCard from "./TaskCard.astro";
+
+interface Props {
+  title: string;
+  tasks: Todo[];
+  id: ColumnType;
+}
+
+const { title, tasks, id } = Astro.props;
+---
+
+<div class="col" id={id}>
+  <div class="top-box">
+    <h2 class="h2-title">{title}</h2>
+    <div>
+      <img src="../../public/Plus.svg" alt="add icon" class="add-icon" />
+    </div>
+  </div>
+  <div class="cards-container"></div>
+</div>
+
+<script>
+  import {
+    dragoverHandler,
+    dropHandler,
+    openEmptycard,
+  } from "../ts/KanbanController";
+
+  import { openAddModal } from "../ts/ModalController";
+
+  const cols: NodeListOf<HTMLElement> = document.querySelectorAll(".col");
+  cols.forEach((col) =>
+    col.addEventListener("drop", (event) => dropHandler(event as DragEvent))
+  );
+  cols.forEach((col) =>
+    col.addEventListener("dragover", (event) =>
+      dragoverHandler(event as DragEvent)
+    )
+  );
+
+  const addIcons: NodeListOf<HTMLElement> =
+    document.querySelectorAll(".add-icon");
+  addIcons.forEach((icon) =>
+    icon.addEventListener("click", (event) => {
+      openEmptycard(event);
+      // event.preventDefault();
+
+      // if (openAddModal) {
+      //     openAddModal();
+      // } else {
+      //     (document.querySelector("#addModal") as HTMLDialogElement)?.showModal();
+      // }
+    })
+  );
+</script>
+
+<style>
+  .top-box {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.5rem;
+  }
+  .col {
+    padding: 2rem;
+    width: 100%;
+  }
+  .task-title {
+    color: #1a202c;
+  }
+  .add-icon {
+    cursor: pointer;
+  }
+
+  @media screen and (min-width: 768px) {
+    .sub-container {
+      flex-direction: row;
+      max-width: 1800px;
+      margin: 0 auto;
+    }
+  }
+</style>

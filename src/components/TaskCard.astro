@@ -1,0 +1,32 @@
+---
+import type { Todo } from "../ts/TodoContext";
+interface Props {
+  item: Todo;
+}
+const { item } = Astro.props;
+
+let priorityStr: string;
+let bgColorClass: string;
+
+if (item.priority === 1) {
+  priorityStr = "High";
+  bgColorClass = "bg-high";
+} else if (item.priority === 2) {
+  priorityStr = "Medium";
+  bgColorClass = "bg-mid";
+} else {
+  priorityStr = "Low";
+  bgColorClass = "bg-low";
+}
+
+const deadlineStr = item.deadline;
+const itemId = item.id.toString();
+---
+
+<div class="card" draggable="true" id={itemId}>
+  <div class="task-title">{item.title}</div>
+  <div class=`priority-str ${bgColorClass}`>{priorityStr}</div>
+  {item.deadline && <div class="duedate-text">Due: {deadlineStr}</div>}
+</div>
+
+<script></script>
